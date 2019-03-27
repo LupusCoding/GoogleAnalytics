@@ -1,0 +1,63 @@
+<script>
+    var ut = false;
+
+    //<!-- BEGIN track_user -->
+    var uid = '{user_id}';
+    var ukey = '{user_key}';
+
+    function ga_usr_choice(ukey, val) {
+        window.localStorage.setItem('ga_'+ukey, val);
+        d = new Date();
+        window.localStorage.setItem('ga_'+ukey+'_time', d.getTime());
+    }
+    function ga_user_timing(ukey) {
+        usr_timing = (window.localStorage.getItem('ga_'+ukey+'_time') * 1);
+        dn = new Date();
+        dn.setDate(dn.getDate() - ('{lifetime}' * 1));
+        return (dn.getTime() >= usr_timing);
+    }
+
+    if ((sukey = window.localStorage.getItem('ga_'+ukey)) === 'true') {
+        ut = true;
+    } else if (
+        (sukey === null) ||
+        (sukey === 'false' && ga_user_timing(ukey) === true)
+    ) {
+        ut = window.confirm('{user_track_confirm}'); // change to modal
+        if (ut === true) {
+            ga_usr_choice(ukey, 'true');
+        } else {
+            ga_usr_choice(ukey, 'false');
+        }
+    }
+    //<!-- END track_user -->
+
+    <!-- Google Tag Manager -->
+    window.dataLayer = window.dataLayer || [];
+    gtm_data = {};
+    gtm_data['gtm.start'] = new Date().getTime();
+    gtm_data['event'] = 'gtm.js';
+    if (ut === true) {
+        gtm_data[ukey] = uid;
+    }
+    dataLayer.push(gtm_data);
+    (function(w,d,s,l,i){
+        var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;
+        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+        f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','{ga_token}');
+    <!-- End Google Tag Manager -->
+</script>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript>
+    <iframe
+            src="https://www.googletagmanager.com/ns.html?id={ga_token_noscript}"
+            height="0"
+            width="0"
+            style="display:none;visibility:hidden">
+
+    </iframe>
+</noscript>
+<!-- End Google Tag Manager (noscript) -->

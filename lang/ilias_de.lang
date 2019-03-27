@@ -1,0 +1,11 @@
+<!-- language file start -->
+plugin_configuration#:#Plugin-Einstellungen
+saving_invoked#:#Einstellungen erfolgreich gespeichert.
+active#:#Aktivieren
+ga_token#:#Google Analytics Tracking ID
+ga_token_info#:#&nbsp;
+track_user#:#User ID tracken
+uid_key#:#User ID Key
+uid_key_info#:#Dieser Schlüssel muss identisch mit der konfigurierten Variable in Google Analytics sein. (https://support.google.com/tagmanager/answer/4565987?hl=de&ref_topic=6333310)
+confirm_message#:#Bestätigungsnachricht
+confirm_message_info#:#Diese Nachricht wird Nutzern zur Bestätigung des Tracking angezeigt.
