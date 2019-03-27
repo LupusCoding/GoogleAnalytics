@@ -1,6 +1,6 @@
 # GoogleAnalytics
 
-Work In Progress
+**Work In Progress**<br/>
 Simple Plugin to track statistics with GoogleAnalytics
 
 ### Requirements:
