@@ -5,7 +5,10 @@ namespace LC\ILP\GoogleAnalytics\DataObjects;
 class Settings
 {
 	const PL_GA_SETTING = 'pl_ga_set';
+	const PL_GA_OPT_IN = 1;
+	const PL_GA_OPT_OUT = 2;
 
+	/** @var \ilSetting  */
 	private $settings;
 
 	/** @var bool */
@@ -29,6 +32,12 @@ class Settings
 	/** @var int */
 	private $cookie_lifetime;
 
+	/** @var int */
+	private $opt_in_out;
+
+	/**
+	 * Settings constructor.
+	 */
 	public function __construct()
 	{
 		global $DIC;
@@ -163,8 +172,27 @@ class Settings
 		return $this;
 	}
 
+	/**
+	 * @return int
+	 */
+	public function getOptInOut(): int
+	{
+		return isset($this->opt_in_out) ? $this->opt_in_out : self::PL_GA_OPT_IN;
+	}
 
+	/**
+	 * @param int $opt_in_out
+	 * @return Settings
+	 */
+	public function setOptInOut(int $opt_in_out): Settings
+	{
+		$this->opt_in_out = $opt_in_out;
+		return $this;
+	}
 
+	/**
+	 * @return void
+	 */
 	public function load()
 	{
 		$set = json_decode($this->settings->get(self::PL_GA_SETTING, ''), true);
@@ -174,18 +202,23 @@ class Settings
 		$this->setUidKey(isset($set['uid_key']) ? $set['uid_key'] : '');
 		$this->setConfirmMessage(isset($set['confirm']) ? $set['confirm'] : '');
 		$this->setCookieLifetime(isset($set['lifetime']) ? $set['lifetime'] : 30);
+		$this->setOptInOut(isset($set['opt_in_out']) ? $set['opt_in_out'] : self::PL_GA_OPT_IN);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function save()
 	{
 		$this->settings->set(self::PL_GA_SETTING, json_encode(
 			[
-				'active'    => $this->getActive(),
-				'token'     => $this->getAnalyticsToken(),
-				'track_uid' => $this->getTrackUid(),
-				'uid_key'   => $this->getUidKey(),
-				'confirm'   => $this->getConfirmMessage(),
-				'lifetime'  => $this->getCookieLifetime(),
+				'active'     => $this->getActive(),
+				'token'      => $this->getAnalyticsToken(),
+				'track_uid'  => $this->getTrackUid(),
+				'uid_key'    => $this->getUidKey(),
+				'confirm'    => $this->getConfirmMessage(),
+				'lifetime'   => $this->getCookieLifetime(),
+				'opt_in_out' => $this->getOptInOut(),
 			]
 		));
 	}
