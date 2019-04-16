@@ -94,6 +94,14 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 		$ti->setValue($settings->getUidKey());
 		$form->addItem($ti);
 
+		$rgi = new \ilRadioGroupInputGUI($this->txt('opt_in_out'), 'opt_in_out');
+		$rgo = new \ilRadioOption($this->txt('opt_in'), Settings::PL_GA_OPT_IN);
+		$rgi->addOption($rgo);
+		$rgo = new \ilRadioOption($this->txt('opt_out'), Settings::PL_GA_OPT_OUT);
+		$rgi->addOption($rgo);
+		$rgi->setValue($settings->getOptInOut());
+		$form->addItem($rgi);
+
 		$ti = new \ilTextInputGUI($this->txt('confirm_message'), 'confirm');
 		$ti->setInfo($this->txt('confirm_message_info'));
 		$ti->setValue($settings->getConfirmMessage());
@@ -124,6 +132,9 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 			}
 			if ($_POST['uid_key']) {
 				$settings->setUidKey($_POST['uid_key']);
+			}
+			if ($_POST['opt_in_out']) {
+				$settings->setOptInOut($_POST['opt_in_out']);
 			}
 			if ($_POST['confirm']) {
 				$settings->setConfirmMessage($_POST['confirm']);

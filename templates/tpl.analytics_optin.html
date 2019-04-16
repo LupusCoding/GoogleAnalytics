@@ -1,0 +1,17 @@
+<script type="text/javascript">
+    function ga_user_timing(ukey) {
+        usr_timing = (window.localStorage.getItem('ga_'+ukey+'_time') * 1);
+        dn = new Date();
+        dn.setDate(dn.getDate() - ('{lifetime}' * 1));
+        return (dn.getTime() >= usr_timing);
+    }
+
+    if ((sukey = window.localStorage.getItem('ga_'+window.il_ga.ukey)) === 'true') {
+        window.il_ga.setTrack(true, false);
+    } else if (
+        (sukey === null) ||
+        (sukey === 'false' && ga_user_timing(window.il_ga.ukey) === true)
+    ) {
+        window.il_ga.setTrack(window.confirm('{user_track_confirm}'), true); // change to modal
+    }
+</script>
