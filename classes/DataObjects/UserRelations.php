@@ -63,7 +63,7 @@ class UserRelations
 	 */
 	public function getGaUid()
 	{
-		return isset($this->ga_uid) ? $this->ga_uid : 0;
+		return isset($this->ga_uid) ? $this->ga_uid : $this->hashUser();
 	}
 
 	/**
@@ -77,11 +77,11 @@ class UserRelations
 	}
 
 	/**
-	 * @return bool
+	 * @return bool|null
 	 */
 	public function getGaTrack()
 	{
-		return isset($this->ga_track) ? $this->ga_track : false;
+		return isset($this->ga_track) ? $this->ga_track : null;
 	}
 
 	/**
@@ -123,7 +123,7 @@ class UserRelations
 	 */
 	private function hashUser()
 	{
-		return md5($this->getUserId());
+		return md5((string)$this->getUserId());
 	}
 
 	/**
@@ -133,11 +133,12 @@ class UserRelations
 	public function loadById($id, $use_ga_uid = false)
 	{
 		if ($use_ga_uid === true) {
-			$select = 'SELECT * FROM `' . self::DB_TABLE . '` WHERE ga_uid = ';
+			$select = 'SELECT * FROM `' . self::DB_TABLE . '` WHERE ga_uid = ' .
+				$this->database->quote($id, 'text');
 		} else {
-			$select = 'SELECT * FROM `' . self::DB_TABLE . '` WHERE user_id = ';
+			$select = 'SELECT * FROM `' . self::DB_TABLE . '` WHERE user_id = ' .
+				$this->database->quote($id, 'integer');
 		}
-		$select .= $this->database->quote($id, 'integer');
 
 		$result = $this->database->query($select);
 
@@ -157,7 +158,6 @@ class UserRelations
 			}
 		} else {
 			$this->setUserId($id);
-			$this->setGaUid($this->hashUser());
 			$this->setUpdatedAt();
 			$this->save();
 			$this->update = true;
@@ -188,14 +188,14 @@ class UserRelations
 	{
 		$types = [
 			'integer',
-			'integer',
+			'text',
 			'integer',
 			'timestamp'
 		];
 		$values = [
 			$this->getUserId(),
 			$this->getGaUid(),
-			($this->getGaTrack() == true ? 1 : 0),
+			($this->getGaTrack()),
 			($this->getUpdatedAt() > 0 ? date('Y-m-d H:i:s', $this->getUpdatedAt()) : null),
 		];
 
@@ -216,14 +216,14 @@ class UserRelations
 	private function _update()
 	{
 		$types = [
-			'integer',
+			'text',
 			'integer',
 			'timestamp',
 			'integer',
 		];
 		$values = [
 			$this->getGaUid(),
-			($this->getGaTrack() == true ? 1 : 0),
+			($this->getGaTrack()),
 			($this->getUpdatedAt() > 0 ? date('Y-m-d H:i:s', $this->getUpdatedAt()) : null),
 			$this->getUserId()
 		];
@@ -231,7 +231,7 @@ class UserRelations
 		$query = 'UPDATE `' . self::DB_TABLE . '` SET ';
 		$query .= '`ga_uid` = %s, ';
 		$query .= '`ga_track` = %s, ';
-		$query .= '`updated_at` = %s, ';
+		$query .= '`updated_at` = %s ';
 		$query .= 'WHERE `user_id` = %s ';
 
 		$this->database->manipulateF(
