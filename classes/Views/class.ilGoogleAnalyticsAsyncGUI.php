@@ -86,19 +86,27 @@ class ilGoogleAnalyticsAsyncGUI
 		if (!isset($cmd)) {
 			$cmd = self::$cmd_index;
 		}
-		return $DIC->ctrl()->getLinkTargetByClass([
+
+		$link = $DIC->ctrl()->getLinkTargetByClass([
 			\ilUIPluginRouterGUI::class,
 			self::class
 		], $cmd, false, true, false);
+
+		if (strpos($link, 'baseClass') !== false) {
+			$link = preg_replace_callback('/baseClass=([^&]+)/i', function (array $matches) {
+				return 'baseClass=' . \ilUIPluginRouterGUI::class;
+			}, $link);
+		} else {
+			$link = ilUtil::appendUrlParameterString($link, 'baseClass=' . \ilUIPluginRouterGUI::class);
+		}
+
+		return $link;
 	}
 
 	public function executeCommand()
 	{
 		$cmd = $this->ctrl->getCmd();
 		$next_class = $this->ctrl->getNextClass();
-
-		global $DIC;
-		$DIC->logger()->root()->debug($cmd);
 
 		switch ($next_class) {
 			default:
@@ -122,26 +130,28 @@ class ilGoogleAnalyticsAsyncGUI
 	 */
 	public function setflag()
 	{
-		global $DIC;
-		$DIC->logger()->root()->debug('setflag is triggered!');
-
 		header('Content-Type: application/json');
 		$ret = [
 			'status' => 'failed'
 		];
 		if (isset($_POST) &&
-			array_key_exists('user_id', $_POST) &&
-			array_key_exists('ga_choice', $_POST)) {
+			array_key_exists('ga_data', $_POST)
+		) {
+			$data = json_decode($_POST['ga_data'], true);
+			if (
+				array_key_exists('user_id', $data) &&
+				array_key_exists('ga_choice', $data)
+			) {
 
-			$choice = ($_POST['ga_choice'] === 'true');
+				$choice = ($data['ga_choice'] === 'true');
+				$user_rel = new \LC\ILP\GoogleAnalytics\DataObjects\UserRelations();
+				$user_rel->loadById($data['user_id'], true);
+				$user_rel->setGaTrack($choice);
+				$user_rel->setUpdatedAt();
+				$user_rel->save();
 
-			$user_rel = new \LC\ILP\GoogleAnalytics\DataObjects\UserRelations();
-			$user_rel->loadById((int) $_POST['user_id'], true);
-			$user_rel->setGaTrack($choice);
-			$user_rel->setUpdatedAt();
-			$user_rel->save();
-
-			$ret['status'] = 'success';
+				$ret['status'] = 'success';
+			}
 		}
 
 		echo json_encode($ret);

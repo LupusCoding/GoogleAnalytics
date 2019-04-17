@@ -2,8 +2,8 @@
 plugin_configuration#:#Plugin-Einstellungen
 saving_invoked#:#Einstellungen erfolgreich gespeichert.
 active#:#Aktivieren
-ga_token#:#Google Analytics Tracking ID
-ga_token_info#:#&nbsp;
+ga_token#:#Google Universal Analytics<br/>oder Tag Manager ID
+ga_token_info#:#Tragen Sie hier entweder die Google Analytics ID (Bsp.: UA-12345678-1) oder die Google Tag Manager ID (Bsp.: GTM-1A2B3C4) ein.
 track_user#:#User ID tracken
 uid_key#:#User ID Key
 uid_key_info#:#Dieser Schlüssel muss identisch mit der konfigurierten Variable in Google Analytics sein. (https://support.google.com/tagmanager/answer/4565987?hl=de&ref_topic=6333310)
@@ -11,4 +11,10 @@ confirm_message#:#Bestätigungsnachricht
 confirm_message_info#:#Diese Nachricht wird Nutzern zur Bestätigung des Tracking angezeigt.
 opt_in_out#:#Prüfverfahren
 opt_in#:#OptIn
+opt_in_info#:#Nutzer müssen aktiv bestätigen, dass sie mit dem Tracking einverstanden sind.
 opt_out#:#OptOut
+opt_out_info#:#Nutzer werden getrackt, wenn sie nicht aktiv das Tracking ablehnen.
+opt_out_code#:#OptOut Snippet
+opt_out_code_info#:#Fügen Sie diesen Snippet an geeigneter Stelle ein. Z.B. in Ihrer Nutzungsvereinbarung.
+sentence_active#:#Klicken Sie hier um das Tracking zu deaktivieren.
+sentence_inactive#:#Klicken Sie hier um das Tracking zu aktivieren.

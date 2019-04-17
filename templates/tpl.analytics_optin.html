@@ -6,7 +6,7 @@
         return (dn.getTime() >= usr_timing);
     }
 
-    if ((sukey = window.localStorage.getItem('ga_'+window.il_ga.ukey)) === 'true') {
+    if ((sukey = window.localStorage.getItem('ga_'+window.il_ga.ukey)) === 'true' || window.il_ga.ut === true) {
         window.il_ga.setTrack(true, false);
     } else if (
         (sukey === null) ||

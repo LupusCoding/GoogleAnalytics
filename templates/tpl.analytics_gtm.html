@@ -19,7 +19,7 @@
     }
 
     window['il_ga'] = {
-        ut: false,
+        ut: {ut},
         uid: '{user_id}',
         ukey: '{user_key}',
         setTrack: function (choice, changed) {
@@ -35,7 +35,7 @@
 
                 var ga_xhr = new XMLHttpRequest();
                 ga_xhr.open('POST', '{ajax_link}');
-                ga_xhr.setRequestHeader('Content-Type', 'application/json');
+                ga_xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
                 ga_xhr.onload = function () {
                     if (ga_xhr.status === 200) {
                         var ga_xdata = JSON.parse(ga_xhr.responseText);
@@ -46,12 +46,15 @@
                         }
                     }
                 };
-                ga_xhr.send(JSON.stringify({
+                ga_xhr.send('ga_data=' + JSON.stringify({
                     user_id: window.il_ga.uid,
-                    ga_choice: choice
+                    ga_choice: (choice === true ? 'true' : 'false')
                 }));
             }
         }
     };
+    if (window.il_ga.ut === true) {
+        window.il_ga.setTrack(true, false);
+    }
 
 </script>

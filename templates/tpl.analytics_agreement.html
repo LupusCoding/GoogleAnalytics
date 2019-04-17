@@ -1,0 +1,17 @@
+<script type="text/javascript">
+    var sentence_active = "{sentence_active}";
+    var sentence_inactive = "{sentence_inactive}";
+
+    var ga_active = (typeof window.il_ga === 'object' ? window.il_ga.ut : false);
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('ga_trackbutton').addEventListener('click', function (e) {
+            ga_active = !ga_active;
+            window.il_ga.setTrack(ga_active, true);
+            document.getElementById('ga_trackbutton').innerText = (ga_active ? sentence_active : sentence_inactive);
+            e.preventDefault();
+        });
+        document.getElementById('ga_trackbutton').innerText = (ga_active ? sentence_active : sentence_inactive);
+
+    });
+</script>
+<a id="ga_trackbutton" href="#"></a>

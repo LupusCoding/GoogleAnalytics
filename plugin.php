@@ -1,7 +1,7 @@
 <?php
 
 $id = "ganalytics";
-$version = "0.2.0";
+$version = "0.2.1";
 $ilias_min_version = "5.3.0";
 $ilias_max_version = "5.4.999";
 $responsible = "Ralph Dittrich";
