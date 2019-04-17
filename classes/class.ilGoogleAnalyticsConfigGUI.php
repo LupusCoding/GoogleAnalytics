@@ -87,25 +87,41 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 
 		$cb = new \ilCheckboxInputGUI($this->txt('track_user'), 'track_uid');
 		$cb->setChecked($settings->getTrackUid());
-		$form->addItem($cb);
 
 		$ti = new \ilTextInputGUI($this->txt('uid_key'), 'uid_key');
 		$ti->setInfo($this->txt('uid_key_info'));
 		$ti->setValue($settings->getUidKey());
-		$form->addItem($ti);
+		$cb->addSubItem($ti);
+
+		$form->addItem($cb);
 
 		$rgi = new \ilRadioGroupInputGUI($this->txt('opt_in_out'), 'opt_in_out');
+
 		$rgo = new \ilRadioOption($this->txt('opt_in'), Settings::PL_GA_OPT_IN);
-		$rgi->addOption($rgo);
-		$rgo = new \ilRadioOption($this->txt('opt_out'), Settings::PL_GA_OPT_OUT);
-		$rgi->addOption($rgo);
-		$rgi->setValue($settings->getOptInOut());
-		$form->addItem($rgi);
+		$rgo->setInfo($this->txt('opt_in_info'));
 
 		$ti = new \ilTextInputGUI($this->txt('confirm_message'), 'confirm');
 		$ti->setInfo($this->txt('confirm_message_info'));
 		$ti->setValue($settings->getConfirmMessage());
-		$form->addItem($ti);
+		$rgo->addSubItem($ti);
+
+		$rgi->addOption($rgo);
+
+		$rgo = new \ilRadioOption($this->txt('opt_out'), Settings::PL_GA_OPT_OUT);
+		$rgo->setInfo($this->txt('opt_out_info'));
+
+		$ne = new \ilNonEditableValueGUI($this->txt('opt_out_code'), 'opt_out_code');
+		$ne->setInfo($this->txt('opt_out_code_info'));
+		/** @var \ilTemplate $snippet_tpl */
+		$snippet_tpl = $this->plugin_object->getTemplate('tpl.analytics_agreement.html', true, true);
+		$snippet_tpl->setVariable('sentence_active', $this->txt('sentence_active'));
+		$snippet_tpl->setVariable('sentence_inactive', $this->txt('sentence_inactive'));
+		$ne->setValue($snippet_tpl->get());
+		$rgo->addSubItem($ne);
+		$rgi->addOption($rgo);
+
+		$rgi->setValue($settings->getOptInOut());
+		$form->addItem($rgi);
 
 		$form->addCommandButton("save", $this->lng->txt("save"));
 		$form->setFormAction($this->ctrl->getFormAction($this));
