@@ -111,13 +111,22 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 		$rgo->setInfo($this->txt('opt_out_info'));
 
 		$ne = new \ilNonEditableValueGUI($this->txt('opt_out_code'), 'opt_out_code');
+
 		$ne->setInfo($this->txt('opt_out_code_info'));
-		/** @var \ilTemplate $snippet_tpl */
-		$snippet_tpl = $this->plugin_object->getTemplate('tpl.analytics_agreement.html', true, true);
-		$snippet_tpl->setVariable('sentence_active', $this->txt('sentence_active'));
-		$snippet_tpl->setVariable('sentence_inactive', $this->txt('sentence_inactive'));
-		$ne->setValue($snippet_tpl->get());
+		$snippet_tpl = '<a class="ga_trackbutton" href="#"></a>';
+		$ne->setValue($snippet_tpl);
 		$rgo->addSubItem($ne);
+
+		$ti = new \ilTextInputGUI($this->txt('sentence_active'), 'sentence_active');
+		$ti->setInfo($this->txt('sentence_active_info'));
+		$ti->setValue($settings->getSentenceActive());
+		$rgo->addSubItem($ti);
+
+		$ti = new \ilTextInputGUI($this->txt('sentence_inactive'), 'sentence_inactive');
+		$ti->setInfo($this->txt('sentence_inactive_info'));
+		$ti->setValue($settings->getSentenceInactive());
+		$rgo->addSubItem($ti);
+
 		$rgi->addOption($rgo);
 
 		$rgi->setValue($settings->getOptInOut());
@@ -154,6 +163,12 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 			}
 			if ($_POST['confirm']) {
 				$settings->setConfirmMessage($_POST['confirm']);
+			}
+			if ($_POST['sentence_active']) {
+				$settings->setSentenceActive($_POST['sentence_active']);
+			}
+			if ($_POST['sentence_inactive']) {
+				$settings->setSentenceInactive($_POST['sentence_inactive']);
 			}
 
 			$settings->save();
