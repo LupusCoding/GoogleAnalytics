@@ -35,6 +35,12 @@ class Settings
 	/** @var int */
 	private $opt_in_out;
 
+	/** @var string */
+	private $sentence_active;
+
+	/** @var string */
+	private $sentence_inactive;
+
 	/**
 	 * Settings constructor.
 	 */
@@ -191,6 +197,44 @@ class Settings
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getSentenceActive(): string
+	{
+		return isset($this->sentence_active) ? $this->sentence_active : '';
+	}
+
+	/**
+	 * @param string $sentence_active
+	 * @return Settings
+	 */
+	public function setSentenceActive(string $sentence_active): Settings
+	{
+		$this->sentence_active = $sentence_active;
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSentenceInactive(): string
+	{
+		return isset($this->sentence_inactive) ? $this->sentence_inactive : '';
+	}
+
+	/**
+	 * @param string $sentence_inactive
+	 * @return Settings
+	 */
+	public function setSentenceInactive(string $sentence_inactive): Settings
+	{
+		$this->sentence_inactive = $sentence_inactive;
+		return $this;
+	}
+
+
+
+	/**
 	 * @return void
 	 */
 	public function load()
@@ -203,6 +247,8 @@ class Settings
 		$this->setConfirmMessage(isset($set['confirm']) ? $set['confirm'] : '');
 		$this->setCookieLifetime(isset($set['lifetime']) ? $set['lifetime'] : 30);
 		$this->setOptInOut(isset($set['opt_in_out']) ? $set['opt_in_out'] : self::PL_GA_OPT_IN);
+		$this->setSentenceActive(isset($set['sentence_active']) ? $set['sentence_active'] : '');
+		$this->setSentenceInactive(isset($set['sentence_inactive']) ? $set['sentence_inactive'] : '');
 	}
 
 	/**
@@ -212,13 +258,15 @@ class Settings
 	{
 		$this->settings->set(self::PL_GA_SETTING, json_encode(
 			[
-				'active'     => $this->getActive(),
-				'token'      => $this->getAnalyticsToken(),
-				'track_uid'  => $this->getTrackUid(),
-				'uid_key'    => $this->getUidKey(),
-				'confirm'    => $this->getConfirmMessage(),
-				'lifetime'   => $this->getCookieLifetime(),
-				'opt_in_out' => $this->getOptInOut(),
+				'active'            => $this->getActive(),
+				'token'             => $this->getAnalyticsToken(),
+				'track_uid'         => $this->getTrackUid(),
+				'uid_key'           => $this->getUidKey(),
+				'confirm'           => $this->getConfirmMessage(),
+				'lifetime'          => $this->getCookieLifetime(),
+				'opt_in_out'        => $this->getOptInOut(),
+				'sentence_active'   => $this->getSentenceActive(),
+				'sentence_inactive' => $this->getSentenceInactive(),
 			]
 		));
 	}

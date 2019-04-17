@@ -16,5 +16,7 @@ opt_out#:#OptOut
 opt_out_info#:#Nutzer werden getrackt, wenn sie nicht aktiv das Tracking ablehnen.
 opt_out_code#:#OptOut Snippet
 opt_out_code_info#:#Fügen Sie diesen Snippet an geeigneter Stelle ein. Z.B. in Ihrer Nutzungsvereinbarung.
-sentence_active#:#Klicken Sie hier um das Tracking zu deaktivieren.
-sentence_inactive#:#Klicken Sie hier um das Tracking zu aktivieren.
+sentence_active#:#Deaktivierungstext
+sentence_active_info#:#Text zum Deaktivieren des Tracking. Bsp.: Klicken Sie hier um das Tracking zu deaktivieren.
+sentence_inactive#:#Aktivierungstext
+sentence_inactive_info#:#Text zum Aktivieren des Tracking. Bsp.: Klicken Sie hier um das Tracking zu aktivieren.

@@ -31,49 +31,31 @@ class ilGoogleAnalyticsUIHookGui extends ilUIHookPluginGUI
 
 				if (strtolower($a_par['tpl_id']) == "tpl.main.html") {
 
-					if ($this->isSpecificGUI('ilAdministrationGUI')) {
-						// admin pages should not be tracked
-					} else if ($this->isSpecificGUI('ilStartUpGUI')) {
-						$html = $a_par['html'];
-						$index = strripos($html, "</head>", -7);
-						if ($index !== false && $settings->getTrackUid()) {
+					$html = $a_par['html'];
+					$index = strripos($html, "</head>", -7);
+					if ($index !== false && $settings->getTrackUid()) {
 
-							if ($this->isUserLoggedIn($DIC->user())) {
-								// Tracking script
-								$tracking = $this->getTagManagerHtml($settings, $DIC->user());
+						if ($this->isUserLoggedIn($DIC->user())) {
+							// Tracking script
+							$tracking = $this->getTagManagerHtml($settings, $DIC->user());
+
+							$opt = '';
+							if ($settings->getOptInOut() === Settings::PL_GA_OPT_IN) {
+								// optIn script
+								$opt = $this->getOptInHtml($settings);
+							} else if ($settings->getOptInOut() === Settings::PL_GA_OPT_OUT) {
+								// optIn script
+								$opt = $this->getOptOutHtml($settings);
 							}
 						}
 
 						// noscript
 						$ns = $this->getNoScriptHtml($settings);
 
-						$html = substr($html, 0, $index) . $tracking . $ns . substr($html, $index);
+						$html = substr($html, 0, $index) . $tracking . $opt . $ns . substr($html, $index);
 						return array("mode" => ilUIHookPluginGUI::REPLACE, "html" => $html);
-
-					} else {
-						$html = $a_par['html'];
-						$index = strripos($html, "</head>", -7);
-						if ($index !== false && $settings->getTrackUid()) {
-
-							if ($this->isUserLoggedIn($DIC->user())) {
-								// Tracking script
-								$tracking = $this->getTagManagerHtml($settings, $DIC->user());
-
-								$opt = '';
-								if ($settings->getOptInOut() === Settings::PL_GA_OPT_IN) {
-									// optIn script
-									$opt = $this->getOptInHtml($settings);
-								}
-							}
-
-							// noscript
-							$ns = $this->getNoScriptHtml($settings);
-
-							$html = substr($html, 0, $index) . $tracking . $opt . $ns . substr($html, $index);
-							return array("mode" => ilUIHookPluginGUI::REPLACE, "html" => $html);
-						}
-
 					}
+
 				}
 			}
 		}
@@ -173,15 +155,15 @@ class ilGoogleAnalyticsUIHookGui extends ilUIHookPluginGUI
 	}
 
 	/**
-	 * @deprecated
 	 * @return string
 	 * @throws ilTemplateException
 	 */
 	private function getOptOutHtml(Settings $settings)
 	{
-		/** @var \ilTemplate $opt_tpl */
-		$opt_tpl = $this->plugin_object->getTemplate('tpl.analytics_optout.html', true, true);
-		$opt_tpl->setVariable('ukey', $settings->getUidKey());
-		return $opt_tpl->get();
+		/** @var \ilTemplate $snippet_tpl */
+		$snippet_tpl = $this->plugin_object->getTemplate('tpl.analytics_agreement.html', true, true);
+		$snippet_tpl->setVariable('sentence_active', $settings->getSentenceActive());
+		$snippet_tpl->setVariable('sentence_inactive', $settings->getSentenceInactive());
+		return $snippet_tpl->get();
 	}
 }
