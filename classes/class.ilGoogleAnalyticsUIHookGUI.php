@@ -113,11 +113,21 @@ class ilGoogleAnalyticsUIHookGui extends ilUIHookPluginGUI
 
 		if ($this->isUserLoggedIn($user) /*&& $user_relation->isTrackable()*/) {
 
-			$tpl->setVariable('ut', (
-				$user_relation->getGaTrack() === null ?
-				($settings->getOptInOut() === Settings::PL_GA_OPT_OUT ? 'true' : 'false') :
-				($user_relation->getGaTrack() ? 'true' : 'false')
-			));
+			if ($settings->getOptInOut() === Settings::PL_GA_OPT_OUT) {
+				if ($user_relation->getGaTrack() === null) {
+					$user_relation->setGaTrack(true)->save();
+					$tpl->setVariable('ut', 'true');
+				} else {
+					$tpl->setVariable('ut', ($user_relation->getGaTrack() ? 'true' : 'false'));
+				}
+			} else {
+				if ($user_relation->getGaTrack() === null) {
+					$user_relation->setGaTrack(false)->save();
+					$tpl->setVariable('ut', 'false');
+				} else {
+					$tpl->setVariable('ut', ($user_relation->getGaTrack() ? 'true' : 'false'));
+				}
+			}
 
 			$tpl->setVariable('user_key', $settings->getUidKey());
 			$tpl->setVariable('user_id', $user_relation->getGaUid());
