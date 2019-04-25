@@ -30,3 +30,7 @@ if(!$ilDB->tableExists('ganalytics_urel'))
 	$ilDB->addPrimaryKey('ganalytics_urel', array('user_id'));
 }
 ?>
+<#2>
+<?php
+$ilDB->addIndex('ganalytics_urel', array('ga_uid'), 'i1');
+?>

@@ -101,6 +101,12 @@ class ilGoogleAnalyticsPlugin extends ilUserInterfaceHookPlugin
 	 */
 	protected function beforeUninstall()
 	{
+		global $DIC;
+		$DIC->database()->dropIndex('ganalytics_urel', 'i1');
+		$DIC->database()->dropTable('ganalytics_urel', false);
+		$this->settings->deleteAll();
+		$settings = $DIC->settings();
+		$settings->delete('pl_ga_set');
 		return true;
 	}
 }
