@@ -1,0 +1,22 @@
+<!-- language file start -->
+plugin_configuration#:#Plugin Configuration
+saving_invoked#:#Configration saved.
+active#:#Activate
+ga_token#:#Google Universal Analytics<br/>or Tag Manager ID
+ga_token_info#:#Insert the Google Analytics ID (I.e.: UA-12345678-1) or the Google Tag Manager ID (I.e.: GTM-1A2B3C4).
+track_user#:#User ID tracking
+uid_key#:#User ID Key
+uid_key_info#:#This key must be identical to the configurable variable from Google Analytics. (https://support.google.com/tagmanager/answer/4565987?hl=de&ref_topic=6333310)
+confirm_message#:#Confirmation message
+confirm_message_info#:#Users will see this message as the tracking confirmation message.
+opt_in_out#:#Approval procedure
+opt_in#:#OptIn
+opt_in_info#:#Users must agree the tracking, otherwise they will not be tracked.
+opt_out#:#OptOut
+opt_out_info#:#Users will be tracked if they do not manually deactivate it.
+opt_out_code#:#OptOut Snippet
+opt_out_code_info#:#Insert this snippet at any place inside an HTML. I.e. at your use agreement.
+sentence_active#:#Deactivation text
+sentence_active_info#:#Text for tracking deactivation. I.e.: Click here to deactivate the tracking.
+sentence_inactive#:#Activation text
+sentence_inactive_info#:#Text for tracking activation. I.e.: Click here to activate the tracking.
