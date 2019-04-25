@@ -7,7 +7,6 @@ use \LC\ILP\GoogleAnalytics\DataObjects\Settings;
 /**
  * Class ilGoogleAnalyticsConfigGUI
  * @author Ralph Dittrich <dittrich.ralph@lupuscoding.de>
- *
  */
 class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 {
@@ -22,6 +21,9 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 
 	/** @var \ilTemplate */
 	protected $tpl;
+	
+	/** @var \LC\ILP\GoogleAnalytics\DataObjects\Settings */
+	protected $settings;
 
 	/**
 	 * ilGoogleAnalyticsConfigGUI constructor.
@@ -34,6 +36,7 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 		$this->ctrl = $DIC->ctrl();
 		$this->lng = $DIC->language();
 		$this->tpl = $DIC["tpl"];
+		$this->settings = new Settings();
 	}
 
 	/**
@@ -69,28 +72,26 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 	/**
 	 * @return ilPropertyFormGUI
 	 */
-	protected function getConfigurationForm()
+	protected function getConfigurationForm(): ilPropertyFormGUI
 	{
-		$settings = new Settings();
-
 		$form = new ilPropertyFormGUI();
 		$form->setTitle($this->plugin->getPluginName() . ' ' . $this->txt("plugin_configuration"));
 
 		$cb = new \ilCheckboxInputGUI($this->txt('active'), 'active');
-		$cb->setChecked($settings->getActive());
+		$cb->setChecked($this->settings->getActive());
 		$form->addItem($cb);
 
 		$ti = new \ilTextInputGUI($this->txt('ga_token'), 'token');
 		$ti->setInfo($this->txt('ga_token_info'));
-		$ti->setValue($settings->getAnalyticsToken());
+		$ti->setValue($this->settings->getAnalyticsToken());
 		$form->addItem($ti);
 
 		$cb = new \ilCheckboxInputGUI($this->txt('track_user'), 'track_uid');
-		$cb->setChecked($settings->getTrackUid());
+		$cb->setChecked($this->settings->getTrackUid());
 
 		$ti = new \ilTextInputGUI($this->txt('uid_key'), 'uid_key');
 		$ti->setInfo($this->txt('uid_key_info'));
-		$ti->setValue($settings->getUidKey());
+		$ti->setValue($this->settings->getUidKey());
 		$cb->addSubItem($ti);
 
 		$form->addItem($cb);
@@ -102,7 +103,7 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 
 		$ti = new \ilTextInputGUI($this->txt('confirm_message'), 'confirm');
 		$ti->setInfo($this->txt('confirm_message_info'));
-		$ti->setValue($settings->getConfirmMessage());
+		$ti->setValue($this->settings->getConfirmMessage());
 		$rgo->addSubItem($ti);
 
 		$rgi->addOption($rgo);
@@ -119,17 +120,17 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 
 		$ti = new \ilTextInputGUI($this->txt('sentence_active'), 'sentence_active');
 		$ti->setInfo($this->txt('sentence_active_info'));
-		$ti->setValue($settings->getSentenceActive());
+		$ti->setValue($this->settings->getSentenceActive());
 		$rgo->addSubItem($ti);
 
 		$ti = new \ilTextInputGUI($this->txt('sentence_inactive'), 'sentence_inactive');
 		$ti->setInfo($this->txt('sentence_inactive_info'));
-		$ti->setValue($settings->getSentenceInactive());
+		$ti->setValue($this->settings->getSentenceInactive());
 		$rgo->addSubItem($ti);
 
 		$rgi->addOption($rgo);
 
-		$rgi->setValue($settings->getOptInOut());
+		$rgi->setValue($this->settings->getOptInOut());
 		$form->addItem($rgi);
 
 		$form->addCommandButton("save", $this->lng->txt("save"));
@@ -138,40 +139,41 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 		return $form;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function save()
 	{
-		$settings = new Settings();
-
 		$form = $this->getConfigurationForm();
 
 		if ($form->checkInput()) {
 			// save...
-			if ($_POST['active']) {
-				$settings->setActive(($_POST['active'] == true));
+			if ($form->getInput('active')) {
+				$this->settings->setActive(($form->getInput('active') == true));
 			}
-			if ($_POST['token']) {
-				$settings->setAnalyticsToken($_POST['token']);
+			if ($form->getInput('token')) {
+				$this->settings->setAnalyticsToken($form->getInput('token'));
 			}
-			if ($_POST['track_uid']) {
-				$settings->setTrackUid(($_POST['track_uid'] == true));
+			if ($form->getInput('track_uid')) {
+				$this->settings->setTrackUid(($form->getInput('track_uid') == true));
 			}
-			if ($_POST['uid_key']) {
-				$settings->setUidKey($_POST['uid_key']);
+			if ($form->getInput('uid_key')) {
+				$this->settings->setUidKey($form->getInput('uid_key'));
 			}
-			if ($_POST['opt_in_out']) {
-				$settings->setOptInOut($_POST['opt_in_out']);
+			if ($form->getInput('opt_in_out')) {
+				$this->settings->setOptInOut($form->getInput('opt_in_out'));
 			}
-			if ($_POST['confirm']) {
-				$settings->setConfirmMessage($_POST['confirm']);
+			if ($form->getInput('confirm')) {
+				$this->settings->setConfirmMessage($form->getInput('confirm'));
 			}
-			if ($_POST['sentence_active']) {
-				$settings->setSentenceActive($_POST['sentence_active']);
+			if ($form->getInput('sentence_active')) {
+				$this->settings->setSentenceActive($form->getInput('sentence_active'));
 			}
-			if ($_POST['sentence_inactive']) {
-				$settings->setSentenceInactive($_POST['sentence_inactive']);
+			if ($form->getInput('sentence_inactive')) {
+				$this->settings->setSentenceInactive($form->getInput('sentence_inactive'));
 			}
 
-			$settings->save();
+			$this->settings->save();
 
 			ilUtil::sendSuccess($this->txt("saving_invoked"), true);
 			$this->ctrl->redirect($this, "configure");
@@ -186,7 +188,7 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 	 * @param $a_var
 	 * @return string
 	 */
-	protected function txt($a_var)
+	protected function txt($a_var): string
 	{
 		return $this->plugin->txt($a_var);
 	}

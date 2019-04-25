@@ -13,7 +13,7 @@ class ilGoogleAnalyticsPlugin extends ilUserInterfaceHookPlugin
 	const PLUGIN_SETTINGS = "qu_uihk_ganalytics";
 	const PLUGIN_NS = 'LC\ILP\GoogleAnalytics';
 
-	/** @var ilNewsManPlugin */
+	/** @var ilGoogleAnalyticsPlugin */
 	protected static $instance;
 
 	/** @var \ilSetting */
@@ -28,7 +28,7 @@ class ilGoogleAnalyticsPlugin extends ilUserInterfaceHookPlugin
 	}
 
 	/**
-	 * @return ilNewsManPlugin
+	 * @return ilGoogleAnalyticsPlugin|ilNewsManPlugin
 	 */
 	public static function getInstance()
 	{
@@ -57,7 +57,7 @@ class ilGoogleAnalyticsPlugin extends ilUserInterfaceHookPlugin
 	}
 
 	/**
-	 * ilNewsManPlugin constructor.
+	 * ilGoogleAnalyticsPlugin constructor.
 	 */
 	public function __construct() {
 		parent::__construct();
@@ -71,7 +71,8 @@ class ilGoogleAnalyticsPlugin extends ilUserInterfaceHookPlugin
 	/**
 	 * @return string
 	 */
-	public function getPluginName() {
+	public function getPluginName(): string
+	{
 		return self::PLUGIN_NAME;
 	}
 
@@ -83,17 +84,29 @@ class ilGoogleAnalyticsPlugin extends ilUserInterfaceHookPlugin
 		return $this->settings;
 	}
 
+	/**
+	 * @return void
+	 */
+	protected function afterActivation()
+	{}
 
-	protected function afterActivation() {
-		// Do something
-	}
+	/**
+	 * @return void
+	 */
+	protected function afterDeactivation()
+	{}
 
-	protected function afterDeactivation() {
-		// Do something
-	}
-
-	protected function beforeUninstall() {
-		// Do something
+	/**
+	 * @return bool
+	 */
+	protected function beforeUninstall()
+	{
+		global $DIC;
+		$DIC->database()->dropIndex('ganalytics_urel', 'i1');
+		$DIC->database()->dropTable('ganalytics_urel', false);
+		$this->settings->deleteAll();
+		$settings = $DIC->settings();
+		$settings->delete('pl_ga_set');
 		return true;
 	}
 }

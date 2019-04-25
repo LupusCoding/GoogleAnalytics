@@ -18,33 +18,15 @@ class ilGoogleAnalyticsAsyncGUI
 	/** @var string  */
 	protected static $cmd_index = self::CMD_INDEX;
 
+	/**
+	 * ilGoogleAnalyticsAsyncGUI constructor.
+	 */
 	public final function __construct()
 	{
 		global $DIC;
 
 		$this->plugin = \ilGoogleAnalyticsPlugin::getInstance();
-		$this->tpl = $DIC['tpl'];
 		$this->ctrl = $DIC->ctrl();
-		$this->database = $DIC->database();
-		$this->tabs = $DIC->tabs();
-		$this->lng = $DIC->language();
-		$this->toolbar = $DIC->toolbar();
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getTabs(): array
-	{
-		return [];
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getActiveTab(): string
-	{
-		return '';
 	}
 
 	/**
@@ -64,9 +46,9 @@ class ilGoogleAnalyticsAsyncGUI
 	}
 
 	/**
-	 * @return ilGoogleAnalyticsAsyncGUI|\LC\ILP\GoogleAnalytics\Views\AbstractView
+	 * @return ilGoogleAnalyticsAsyncGUI
 	 */
-	public static function getInstance()
+	public static function getInstance(): ilGoogleAnalyticsAsyncGUI
 	{
 		if (self::$instance === NULL) {
 			self::$instance = new self();
@@ -76,11 +58,11 @@ class ilGoogleAnalyticsAsyncGUI
 	}
 
 	/**
-	 * @param string|null $cmd
+	 * @param string $cmd
 	 * @param bool $async
 	 * @return string
 	 */
-	public static function getEntryLink(string $cmd = null, bool $async = false): string
+	public static function getEntryLink(string $cmd = null): string
 	{
 		global $DIC;
 		if (!isset($cmd)) {
@@ -92,6 +74,11 @@ class ilGoogleAnalyticsAsyncGUI
 			self::class
 		], $cmd, false, true, false);
 
+		if (strpos($link, 'goto.php') !== false) {
+			$link = str_replace('goto.php', 'ilias.php', $link);
+		} else if (strpos($link, 'ilias.php') === false) {
+			$link = 'ilias.php' . $link;
+		}
 		if (strpos($link, 'baseClass') !== false) {
 			$link = preg_replace_callback('/baseClass=([^&]+)/i', function (array $matches) {
 				return 'baseClass=' . \ilUIPluginRouterGUI::class;
@@ -103,6 +90,9 @@ class ilGoogleAnalyticsAsyncGUI
 		return $link;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function executeCommand()
 	{
 		$cmd = $this->ctrl->getCmd();
@@ -130,14 +120,16 @@ class ilGoogleAnalyticsAsyncGUI
 	 */
 	public function setflag()
 	{
-		header('Content-Type: application/json');
+		global $DIC;
+		$post = $DIC->http()->request()->getParsedBody();
+
 		$ret = [
 			'status' => 'failed'
 		];
-		if (isset($_POST) &&
-			array_key_exists('ga_data', $_POST)
+		if (isset($post) &&
+			array_key_exists('ga_data', $post)
 		) {
-			$data = json_decode($_POST['ga_data'], true);
+			$data = json_decode($post['ga_data'], true);
 			if (
 				array_key_exists('user_id', $data) &&
 				array_key_exists('ga_choice', $data)
@@ -154,7 +146,19 @@ class ilGoogleAnalyticsAsyncGUI
 			}
 		}
 
-		echo json_encode($ret);
+		$responseStream = \ILIAS\Filesystem\Stream\Streams::ofString(json_encode($ret));
+		$response = $DIC->http()->response()
+			->withHeader('Content-Type', 'application/json')
+			->withStatus(200)
+			->withBody($responseStream);
+		$DIC->http()->saveResponse($response);
+		try {
+			$DIC->http()->sendResponse();
+		} catch (\Exception $e) {
+			$ret['message'] = $e->getMessage();
+			echo json_encode($ret);
+		}
+
 		exit();
 	}
 

@@ -35,7 +35,7 @@ class ilGoogleAnalyticsUIHookGui extends ilUIHookPluginGUI
 					$index = strripos($html, "</head>", -7);
 					if ($index !== false && $settings->getTrackUid()) {
 
-						if ($this->isUserLoggedIn($DIC->user())) {
+						if ($this->isTrackableUser($DIC->user())) {
 							// Tracking script
 							$tracking = $this->getTagManagerHtml($settings, $DIC->user());
 
@@ -59,6 +59,7 @@ class ilGoogleAnalyticsUIHookGui extends ilUIHookPluginGUI
 				}
 			}
 		}
+		return ['mode' => ilUIHookPluginGUI::KEEP, 'html' => ''];
 	}
 
 	/**
@@ -74,7 +75,8 @@ class ilGoogleAnalyticsUIHookGui extends ilUIHookPluginGUI
 	 * @param string $class_name
 	 * @return bool
 	 */
-	protected function isSpecificGUI(string $class_name): bool {
+	protected function isSpecificGUI(string $class_name): bool
+	{
 		global $DIC;
 
 		return (count(array_filter($DIC->ctrl()->getCallHistory(), function (array $history) use ($class_name): bool {
@@ -86,7 +88,7 @@ class ilGoogleAnalyticsUIHookGui extends ilUIHookPluginGUI
 	 * @param ilObjUser $user
 	 * @return bool
 	 */
-	private function isUserLoggedIn(\ilObjUser $user)
+	private function isTrackableUser(\ilObjUser $user): bool
 	{
 		return (
 			!$user->isAnonymous() &&
@@ -101,9 +103,9 @@ class ilGoogleAnalyticsUIHookGui extends ilUIHookPluginGUI
 	 * @return string
 	 * @throws ilTemplateException
 	 */
-	private function getTagManagerHtml(Settings $settings, \ilObjUser $user)
+	private function getTagManagerHtml(Settings $settings, \ilObjUser $user): string
 	{
-		$async_link = \ilGoogleAnalyticsAsyncGUI::getEntryLink('setflag', true);
+		$async_link = \ilGoogleAnalyticsAsyncGUI::getEntryLink('setflag');
 		$user_relation = new UserRelations();
 		$user_relation->loadById($user->getId());
 
@@ -111,7 +113,7 @@ class ilGoogleAnalyticsUIHookGui extends ilUIHookPluginGUI
 		$tpl = $this->plugin_object->getTemplate('tpl.analytics_gtm.html', true, true);
 		$tpl->setVariable('ga_token', $settings->getAnalyticsToken());
 
-		if ($this->isUserLoggedIn($user) /*&& $user_relation->isTrackable()*/) {
+		if ($this->isTrackableUser($user)) {
 
 			if ($settings->getOptInOut() === Settings::PL_GA_OPT_OUT) {
 				if ($user_relation->getGaTrack() === null) {
@@ -142,7 +144,7 @@ class ilGoogleAnalyticsUIHookGui extends ilUIHookPluginGUI
 	 * @return string
 	 * @throws ilTemplateException
 	 */
-	private function getNoScriptHtml(Settings $settings)
+	private function getNoScriptHtml(Settings $settings): string
 	{
 		/** @var \ilTemplate $ns_tpl */
 		$ns_tpl = $this->plugin_object->getTemplate('tpl.analytics_noscript.html', true, true);
@@ -155,7 +157,7 @@ class ilGoogleAnalyticsUIHookGui extends ilUIHookPluginGUI
 	 * @return string
 	 * @throws ilTemplateException
 	 */
-	private function getOptInHtml(Settings $settings)
+	private function getOptInHtml(Settings $settings): string
 	{
 		/** @var \ilTemplate $opt_tpl */
 		$opt_tpl = $this->plugin_object->getTemplate('tpl.analytics_optin.html', true, true);
@@ -168,7 +170,7 @@ class ilGoogleAnalyticsUIHookGui extends ilUIHookPluginGUI
 	 * @return string
 	 * @throws ilTemplateException
 	 */
-	private function getOptOutHtml(Settings $settings)
+	private function getOptOutHtml(Settings $settings): string
 	{
 		/** @var \ilTemplate $snippet_tpl */
 		$snippet_tpl = $this->plugin_object->getTemplate('tpl.analytics_agreement.html', true, true);
