@@ -80,7 +80,7 @@ class ilGoogleAnalyticsAsyncGUI
 	 * @param bool $async
 	 * @return string
 	 */
-	public static function getEntryLink(string $cmd = null, bool $async = false): string
+	public static function getEntryLink(string $cmd = null): string
 	{
 		global $DIC;
 		if (!isset($cmd)) {
