@@ -64,7 +64,7 @@ class ilGoogleAnalyticsAsyncGUI
 	}
 
 	/**
-	 * @return ilGoogleAnalyticsAsyncGUI|\LC\ILP\GoogleAnalytics\Views\AbstractView
+	 * @return ilGoogleAnalyticsAsyncGUI
 	 */
 	public static function getInstance()
 	{
