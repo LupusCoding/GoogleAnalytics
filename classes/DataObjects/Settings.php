@@ -2,6 +2,11 @@
 
 namespace LC\ILP\GoogleAnalytics\DataObjects;
 
+/**
+ * Class Settings
+ * @package LC\ILP\GoogleAnalytics\DataObjects
+ * @author Ralph Dittrich <dittrich.ralph@lupuscoding.de>
+ */
 class Settings
 {
 	const PL_GA_SETTING = 'pl_ga_set';

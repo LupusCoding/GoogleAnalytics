@@ -18,33 +18,15 @@ class ilGoogleAnalyticsAsyncGUI
 	/** @var string  */
 	protected static $cmd_index = self::CMD_INDEX;
 
+	/**
+	 * ilGoogleAnalyticsAsyncGUI constructor.
+	 */
 	public final function __construct()
 	{
 		global $DIC;
 
 		$this->plugin = \ilGoogleAnalyticsPlugin::getInstance();
-		$this->tpl = $DIC['tpl'];
 		$this->ctrl = $DIC->ctrl();
-		$this->database = $DIC->database();
-		$this->tabs = $DIC->tabs();
-		$this->lng = $DIC->language();
-		$this->toolbar = $DIC->toolbar();
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getTabs(): array
-	{
-		return [];
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getActiveTab(): string
-	{
-		return '';
 	}
 
 	/**
@@ -66,7 +48,7 @@ class ilGoogleAnalyticsAsyncGUI
 	/**
 	 * @return ilGoogleAnalyticsAsyncGUI
 	 */
-	public static function getInstance()
+	public static function getInstance(): ilGoogleAnalyticsAsyncGUI
 	{
 		if (self::$instance === NULL) {
 			self::$instance = new self();
@@ -76,7 +58,7 @@ class ilGoogleAnalyticsAsyncGUI
 	}
 
 	/**
-	 * @param string|null $cmd
+	 * @param string $cmd
 	 * @param bool $async
 	 * @return string
 	 */
@@ -103,6 +85,9 @@ class ilGoogleAnalyticsAsyncGUI
 		return $link;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function executeCommand()
 	{
 		$cmd = $this->ctrl->getCmd();

@@ -27,7 +27,7 @@ class UserRelations
 
 	/**
 	 * UserRelations constructor.
-	 * @param null $id
+	 * @param int $id
 	 */
 	public function __construct($id = null)
 	{
@@ -43,7 +43,7 @@ class UserRelations
 	/**
 	 * @return int
 	 */
-	public function getUserId()
+	public function getUserId(): int
 	{
 		return isset($this->user_id) ? $this->user_id : 0;
 	}
@@ -52,7 +52,7 @@ class UserRelations
 	 * @param int $user_id
 	 * @return UserRelations
 	 */
-	public function setUserId($user_id)
+	public function setUserId($user_id): UserRelations
 	{
 		$this->user_id = $user_id;
 		return $this;
@@ -61,7 +61,7 @@ class UserRelations
 	/**
 	 * @return string
 	 */
-	public function getGaUid()
+	public function getGaUid(): bool
 	{
 		return isset($this->ga_uid) ? $this->ga_uid : $this->hashUser();
 	}
@@ -70,7 +70,7 @@ class UserRelations
 	 * @param string $ga_uid
 	 * @return UserRelations
 	 */
-	public function setGaUid($ga_uid)
+	public function setGaUid($ga_uid): UserRelations
 	{
 		$this->ga_uid = $ga_uid;
 		return $this;
@@ -88,7 +88,7 @@ class UserRelations
 	 * @param bool $ga_track
 	 * @return UserRelations
 	 */
-	public function setGaTrack($ga_track)
+	public function setGaTrack($ga_track): UserRelations
 	{
 		$this->ga_track = $ga_track;
 		return $this;
@@ -104,16 +104,18 @@ class UserRelations
 
 	/**
 	 * @param int $updated_at
+	 * @return UserRelations
 	 */
-	public function setUpdatedAt($updated_at = null)
+	public function setUpdatedAt($updated_at = null): UserRelations
 	{
 		$this->updated_at =  (isset($updated_at) ? $updated_at : time());
+		return $this;
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isTrackable()
+	public function isTrackable(): bool
 	{
 		return ($this->getGaTrack() || $this->getGaTrack() === null);
 	}
@@ -121,7 +123,7 @@ class UserRelations
 	/**
 	 * @return string
 	 */
-	private function hashUser()
+	private function hashUser(): string
 	{
 		return md5((string)$this->getUserId());
 	}
@@ -130,7 +132,7 @@ class UserRelations
 	 * @param $id
 	 * @return bool
 	 */
-	public function loadById($id, $use_ga_uid = false)
+	public function loadById($id, $use_ga_uid = false): bool
 	{
 		if ($use_ga_uid === true) {
 			$select = 'SELECT * FROM `' . self::DB_TABLE . '` WHERE ga_uid = ' .
