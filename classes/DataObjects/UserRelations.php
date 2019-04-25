@@ -146,16 +146,12 @@ class UserRelations
 		if (!empty($res)) {
 			$res = $res[0];
 
-			try {
-				$this->setUserId($res['user_id']);
-				$this->setGaUid($res['ga_uid']);
-				$this->setGaTrack(($res['ga_track'] == 1));
-				$this->setUpdatedAt(strtotime($res['updated_at']));
-				$this->update = true;
-				return true;
-			} catch (\Exception $e) {
-				return false;
-			}
+			$this->setUserId($res['user_id']);
+			$this->setGaUid($res['ga_uid']);
+			$this->setGaTrack(($res['ga_track'] == 1));
+			$this->setUpdatedAt(strtotime($res['updated_at']));
+			$this->update = true;
+			return true;
 		} else {
 			$this->setUserId($id);
 			$this->setUpdatedAt();
@@ -200,7 +196,7 @@ class UserRelations
 		];
 
 		$query = 'INSERT INTO `' . self::DB_TABLE . '` ';
-		$query .= '(`user_id`, `ga_uid`, `ga_track`, `updated_at`) ';
+		$query .= '(user_id, ga_uid, ga_track, updated_at) ';
 		$query .= 'VALUES (%s, %s, %s, %s) ';
 
 		$this->database->manipulateF(
@@ -229,9 +225,9 @@ class UserRelations
 		];
 
 		$query = 'UPDATE `' . self::DB_TABLE . '` SET ';
-		$query .= '`ga_uid` = %s, ';
-		$query .= '`ga_track` = %s, ';
-		$query .= '`updated_at` = %s ';
+		$query .= 'ga_uid = %s, ';
+		$query .= 'ga_track = %s, ';
+		$query .= 'updated_at = %s ';
 		$query .= 'WHERE `user_id` = %s ';
 
 		$this->database->manipulateF(
