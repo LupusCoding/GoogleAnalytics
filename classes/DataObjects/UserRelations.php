@@ -61,9 +61,9 @@ class UserRelations
 	/**
 	 * @return string
 	 */
-	public function getGaUid(): bool
+	public function getGaUid(): string
 	{
-		return isset($this->ga_uid) ? $this->ga_uid : $this->hashUser();
+		return isset($this->ga_uid) && strlen($this->ga_uid) > 1 ? $this->ga_uid : $this->hashUser();
 	}
 
 	/**
@@ -157,6 +157,7 @@ class UserRelations
 		} else {
 			$this->setUserId($id);
 			$this->setUpdatedAt();
+			$this->setGaUid($this->hashUser());
 			$this->save();
 			$this->update = true;
 			return true;
