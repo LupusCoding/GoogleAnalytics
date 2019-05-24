@@ -77,18 +77,22 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 		$form = new ilPropertyFormGUI();
 		$form->setTitle($this->plugin->getPluginName() . ' ' . $this->txt("plugin_configuration"));
 
+		// activate tracking
 		$cb = new \ilCheckboxInputGUI($this->txt('active'), 'active');
 		$cb->setChecked($this->settings->getActive());
 		$form->addItem($cb);
 
+		// g token
 		$ti = new \ilTextInputGUI($this->txt('ga_token'), 'token');
 		$ti->setInfo($this->txt('ga_token_info'));
 		$ti->setValue($this->settings->getAnalyticsToken());
 		$form->addItem($ti);
 
+		// track user
 		$cb = new \ilCheckboxInputGUI($this->txt('track_user'), 'track_uid');
 		$cb->setChecked($this->settings->getTrackUid());
 
+		// gtag field for user_id
 		$ti = new \ilTextInputGUI($this->txt('uid_key'), 'uid_key');
 		$ti->setInfo($this->txt('uid_key_info'));
 		$ti->setValue($this->settings->getUidKey());
@@ -96,11 +100,20 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 
 		$form->addItem($cb);
 
+		// add noscript
+		$cb = new \ilCheckboxInputGUI($this->txt('add_noscript'), 'add_noscript');
+		$cb->setInfo($this->txt('add_noscript_info'));
+		$cb->setChecked($this->settings->getAddNoscript());
+		$form->addItem($cb);
+
+		// optin / optout
 		$rgi = new \ilRadioGroupInputGUI($this->txt('opt_in_out'), 'opt_in_out');
 
+		// optin
 		$rgo = new \ilRadioOption($this->txt('opt_in'), Settings::PL_GA_OPT_IN);
 		$rgo->setInfo($this->txt('opt_in_info'));
 
+		// optin message
 		$ti = new \ilTextInputGUI($this->txt('confirm_message'), 'confirm');
 		$ti->setInfo($this->txt('confirm_message_info'));
 		$ti->setValue($this->settings->getConfirmMessage());
@@ -108,21 +121,24 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 
 		$rgi->addOption($rgo);
 
+		// optout
 		$rgo = new \ilRadioOption($this->txt('opt_out'), Settings::PL_GA_OPT_OUT);
 		$rgo->setInfo($this->txt('opt_out_info'));
 
+		// optout snippet
 		$ne = new \ilNonEditableValueGUI($this->txt('opt_out_code'), 'opt_out_code');
-
 		$ne->setInfo($this->txt('opt_out_code_info'));
 		$snippet_tpl = '<a class="ga_trackbutton" href="#"></a>';
 		$ne->setValue($snippet_tpl);
 		$rgo->addSubItem($ne);
 
+		// optout deactivation message
 		$ti = new \ilTextInputGUI($this->txt('sentence_active'), 'sentence_active');
 		$ti->setInfo($this->txt('sentence_active_info'));
 		$ti->setValue($this->settings->getSentenceActive());
 		$rgo->addSubItem($ti);
 
+		// optout activation message
 		$ti = new \ilTextInputGUI($this->txt('sentence_inactive'), 'sentence_inactive');
 		$ti->setInfo($this->txt('sentence_inactive_info'));
 		$ti->setValue($this->settings->getSentenceInactive());
@@ -159,6 +175,9 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 			}
 			if ($form->getInput('uid_key')) {
 				$this->settings->setUidKey($form->getInput('uid_key'));
+			}
+			if ($form->getInput('add_noscript')) {
+				$this->settings->setAddNoscript(($form->getInput('add_noscript') == true));
 			}
 			if ($form->getInput('opt_in_out')) {
 				$this->settings->setOptInOut($form->getInput('opt_in_out'));

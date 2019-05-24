@@ -49,8 +49,11 @@ class ilGoogleAnalyticsUIHookGui extends ilUIHookPluginGUI
 							}
 						}
 
-						// noscript
-						$ns = $this->getNoScriptHtml($settings);
+						$ns = '';
+						if ($settings->getAddNoscript() === true) {
+							// noscript
+							$ns = $this->getNoScriptHtml($settings);
+						}
 
 						$html = substr($html, 0, $index) . $tracking . $opt . $ns . substr($html, $index);
 						return array("mode" => ilUIHookPluginGUI::REPLACE, "html" => $html);

@@ -46,6 +46,9 @@ class Settings
 	/** @var string */
 	private $sentence_inactive;
 
+	/** @var bool */
+	private $add_noscript;
+
 	/**
 	 * Settings constructor.
 	 */
@@ -237,6 +240,24 @@ class Settings
 		return $this;
 	}
 
+	/**
+	 * @return bool
+	 */
+	public function getAddNoscript(): bool
+	{
+		return isset($this->add_noscript) ? $this->add_noscript : true;
+	}
+
+	/**
+	 * @param bool $add_noscript
+	 * @return Settings
+	 */
+	public function setAddNoscript(bool $add_noscript): Settings
+	{
+		$this->add_noscript = $add_noscript;
+		return $this;
+	}
+
 
 
 	/**
@@ -254,6 +275,7 @@ class Settings
 		$this->setOptInOut(isset($set['opt_in_out']) ? $set['opt_in_out'] : self::PL_GA_OPT_IN);
 		$this->setSentenceActive(isset($set['sentence_active']) ? $set['sentence_active'] : '');
 		$this->setSentenceInactive(isset($set['sentence_inactive']) ? $set['sentence_inactive'] : '');
+		$this->setAddNoscript(isset($set['add_noscript']) ? $set['add_noscript'] : true);
 	}
 
 	/**
@@ -272,6 +294,7 @@ class Settings
 				'opt_in_out'        => $this->getOptInOut(),
 				'sentence_active'   => $this->getSentenceActive(),
 				'sentence_inactive' => $this->getSentenceInactive(),
+				'add_noscript'      => $this->getAddNoscript(),
 			]
 		));
 	}

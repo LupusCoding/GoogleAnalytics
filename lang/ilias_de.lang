@@ -20,3 +20,5 @@ sentence_active#:#Deaktivierungstext
 sentence_active_info#:#Text zum Deaktivieren des Tracking. Bsp.: Klicken Sie hier um das Tracking zu deaktivieren.
 sentence_inactive#:#Aktivierungstext
 sentence_inactive_info#:#Text zum Aktivieren des Tracking. Bsp.: Klicken Sie hier um das Tracking zu aktivieren.
+add_noscript#:#&lt;noscript&gt; Tag hinzufügen
+add_noscript_info#:#Der noscript Tag erlaubt das Tracking von Klicks auch bei deaktiviertem JavaScript.
