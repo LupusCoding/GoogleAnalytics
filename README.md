@@ -1,11 +1,10 @@
 # GoogleAnalytics
 
-**Work In Progress**<br/>
 Simple Plugin to track statistics with GoogleAnalytics
 
 ### Requirements:
-* ILIAS 5.2.0 - 5.3.999
-* PHP 7.0 - 7.1
+* ILIAS 5.3.0 - 5.4.999
+* PHP 7.2+
 
 ### Installation
 
@@ -22,6 +21,9 @@ For more information please contact [LupusCoding](mailto:dittrich.ralph@lupuscod
 
 
 ### Changelog
+**version 1.0.0**
+* Build first release version
+
 **version 0.1.0**
 * Base support for GoogleTagManager and User ID tracking
 
