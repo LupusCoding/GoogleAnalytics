@@ -22,3 +22,27 @@ sentence_inactive#:#Activation text
 sentence_inactive_info#:#Text for tracking activation. I.e.: Click here to activate the tracking.
 add_noscript#:#Add &lt;noscript&gt; tag
 add_noscript_info#:#The noscript tag allows to track clicks, even if javascript is disabled.
+tag_configuration#:#Tag Configuration
+list_of_tags#:#List of Tags
+tag_name#:#Tag Name
+tag_type#:#Tag Data Type
+tag_definition#:#Tag Data Definition
+addNewTag#:#New Tag
+new_tag_form#:#Create new Tag
+edit_tag_form#:#Edit existing Tag
+ga_tag_key#:#TagManager variable
+ga_tag_key_info#:#This must be identical to the configured Google Tag Manager variable. (Caution: This variable name is case-sensitive)
+data_type#:#Type of data
+data_type_info#:#Choose the type of data, that you want to select from.
+user_data#:#User Data
+user_data_info#:#Select from user data. E.g. user ID, login, name, institution, matriculation, etc.
+udf_data#:#UDF Data
+udf_data_info#:#Select from your configured "User Defined Fields". The field must be "visible".
+ud_select#:#Select User data
+udf_select#:#Select User Defined Field
+delete_tags_confirm#:#Do you really want to delete these tags?
+select_one#:#Select at least one tag to delete.
+err_no_data#:#No Tags were selected.
+err_delete_names#:#The following tags could not be deleted: %s.
+delete_success#:#The following tags were deleted: %s.
+

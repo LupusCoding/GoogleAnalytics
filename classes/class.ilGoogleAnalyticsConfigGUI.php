@@ -3,6 +3,8 @@
 require_once('./Services/Component/classes/class.ilPluginConfigGUI.php');
 
 use \LC\ILP\GoogleAnalytics\DataObjects\Settings;
+use \LC\ILP\GoogleAnalytics\DataObjects\Tag;
+use \LC\ILP\GoogleAnalytics\Tables\ilTagListTableGUI;
 
 /**
  * Class ilGoogleAnalyticsConfigGUI
@@ -25,6 +27,15 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 	/** @var \LC\ILP\GoogleAnalytics\DataObjects\Settings */
 	protected $settings;
 
+	/** @var \ilToolbarGUI */
+	protected $toolbar;
+
+	/** @var \ilTabsGUI */
+	protected $tabs;
+
+	/** @var string */
+	protected $active_tab;
+
 	/**
 	 * ilGoogleAnalyticsConfigGUI constructor.
 	 */
@@ -37,6 +48,9 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 		$this->lng = $DIC->language();
 		$this->tpl = $DIC["tpl"];
 		$this->settings = new Settings();
+		$this->toolbar = $DIC->toolbar();
+		$this->tabs = $DIC->tabs();
+		$this->active_tab = '';
 	}
 
 	/**
@@ -47,10 +61,22 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 	{
 		$this->construct();
 		$next_class = $this->ctrl->getNextClass($this);
+		$this->setTabs();
 
 		switch ($next_class) {
 			default:
 				switch ($cmd) {
+					case 'addNewTag':
+					case 'editTag':
+					case 'askDeleteTag':
+						$this->tabs->activateTab('listTags');
+						$this->{$cmd}();
+						break;
+					case 'configure':
+					case 'listTags':
+						$this->tabs->activateTab($cmd);
+						$this->{$cmd}();
+						break;
 					default:
 						$this->{$cmd}();
 						break;
@@ -60,9 +86,340 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 	}
 
 	/**
+	 * @return ilGoogleAnalyticsPlugin
+	 */
+	public function getPlugin(): \ilGoogleAnalyticsPlugin
+	{
+		return $this->plugin;
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function getTabs(): array
+	{
+		return [
+			0 => [
+				'id' => 'configure',
+				'txt' => $this->txt('plugin_configuration'),
+				'cmd' => 'configure',
+			],
+			1 => [
+				'id' => 'listTags',
+				'txt' => $this->txt('tag_configuration'),
+				'cmd' => 'listTags',
+			],
+		];
+	}
+
+	protected function listTags(): void
+	{
+		$btn = \ilLinkButton::getInstance();
+		$btn->setCaption($this->txt('addNewTag'), false);
+		$btn->setUrl($this->ctrl->getLinkTarget($this, 'addNewTag'));
+		$this->toolbar->addButtonInstance($btn);
+
+		$table = new ilTagListTableGUI($this);
+		$this->tpl->setContent($table->getHTML());
+//		$this->tpl->setContent('');
+	}
+
+	/**
+	 * @param ilPropertyFormGUI|null $form
 	 * @return void
 	 */
-	protected function configure()
+	protected function addNewTag(\ilPropertyFormGUI $form = null): void
+	{
+		if (!$form) {
+			$form = $this->getNewTagForm();
+		}
+		$this->tpl->setContent($form->getHTML());
+	}
+
+	protected function editTag(\ilPropertyFormGUI $form = null): void
+	{
+		if (!$form) {
+			$form = $this->getNewTagForm('update');
+		}
+		$this->tpl->setContent($form->getHTML());
+	}
+
+	protected function getNewTagForm($mode = 'create'): \ilPropertyFormGUI
+	{
+		$form = new \ilPropertyFormGUI();
+
+		if ($mode == 'create') {
+			$form->setTitle($this->txt("new_tag_form"));
+		} else {
+			$form->setTitle($this->txt("edit_tag_form"));
+		}
+
+		/**********************************/
+		/* TagManager Variable name Input */
+		/**********************************/
+		$name = new \ilTextInputGUI($this->txt('ga_tag_key'), 'ga_tag_key');
+		$name->setInfo($this->txt('ga_tag_key_info'));
+		$name->setRequired(true);
+
+		/**********************************/
+		/* Type of data Choice            */
+		/**********************************/
+		$type_select = new \ilRadioGroupInputGUI($this->txt('data_type'), 'data_type');
+//		$type_select->setInfo($this->txt('data_type_info'));
+		$type_select->setRequired(true);
+
+		// option user data
+		$ts_usr = new \ilRadioOption($this->txt('user_data'), 'user_data', $this->txt('user_data_info'));
+		/* User data Select               */
+		$ud_values = new \ilSelectInputGUI($this->txt('ud_select'),'ud_select');
+		$ud_values->setOptions($this->getSelectOptionsByChoice('user_data'));
+		$ts_usr->addSubItem($ud_values);
+		$type_select->addOption($ts_usr);
+
+		// option udf data
+		$ts_udf = new \ilRadioOption($this->txt('udf_data'), 'udf_data', $this->txt('udf_data_info'));
+		/* UDF data Select                */
+		$udf_values = new \ilSelectInputGUI($this->txt('udf_select'),'udf_select');
+		$udf_values->setOptions($this->getSelectOptionsByChoice('udf_data'));
+		$ts_udf->addSubItem($udf_values);
+		$type_select->addOption($ts_udf);
+
+		$form->addItem($name);
+		$form->addItem($type_select);
+
+		if ($mode == 'create') {
+			$form->addCommandButton("createTag", $this->lng->txt("save"));
+		} else {
+			$tag_id = $_REQUEST['tag_id'];
+			$tag = new Tag($tag_id);
+
+			$name->setValue($tag->getName());
+			$type_select->setValue($tag->getType());
+
+			switch ($tag->getType()) {
+				case 'user_data':
+					$ud_values->setValue($tag->getDefinition());
+					break;
+				case 'udf_data':
+					$udf_values->setValue($tag->getDefinition());
+					break;
+			}
+
+			$this->ctrl->setParameter($this, 'tag_id', $tag_id);
+			$form->addCommandButton("updateTag", $this->lng->txt("save"));
+		}
+		$form->addCommandButton("listTags", $this->lng->txt("cancel"));
+		$form->setFormAction($this->ctrl->getFormAction($this));
+
+		return $form;
+	}
+
+	/**
+	 * @param string $choice
+	 * @return array
+	 */
+	protected function getSelectOptionsByChoice($choice = 'user_data'): array
+	{
+		$this->lng->loadLanguageModule('common');
+		$this->lng->loadLanguageModule('user');
+		$this->lng->loadLanguageModule('maps');
+		$this->lng->loadLanguageModule('ecs');
+		$options = ['none' => ''];
+		switch ($choice) {
+			case 'user_data':
+				$options = [ // ilObjUser
+					/*
+					 * READ:
+					 * $usrObj = $DIC->user();
+					 * $user->{'get'.$options_key}()
+					 */
+					'id' => $this->lng->txt('links_user_id'), // getId
+					'login' => $this->lng->txt('login'), // getLogin
+					'firstname' => $this->lng->txt('firstname'), // getFirstname
+					'lastname' => $this->lng->txt('lastname'), // getLastname
+					'fullname' => $this->lng->txt('fullname'), // getFullname
+					'u_title' => $this->lng->txt('person_title'), // getUTitle
+					'gender' => $this->lng->txt('gender'), // getGender
+					'email' => $this->lng->txt('email'), // getEmail
+					'second_email' => $this->lng->txt('second_email'), // getSecondEmail
+					'institution' => $this->lng->txt('institution'), // getInstitution
+					'street' => $this->lng->txt('street'), // getStreet
+					'city' => $this->lng->txt('city'), // getCity
+					'zipcode' => $this->lng->txt('zipcode'), // getZipcode
+					'country' => $this->lng->txt('country'), // getCountry
+					'phone_office' => $this->lng->txt('phone_office'), // getPhoneOffice
+					'phone_home' => $this->lng->txt('phone_home'), // getPhoneHome
+					'phone_mobile' => $this->lng->txt('phone_mobile'), // getPhoneMobile
+					'fax' => $this->lng->txt('fax'), // getFax
+					'language' => $this->lng->txt('language'), // getLanguage
+					'last_login' => $this->lng->txt('last_login'), // getLastLogin
+					'last_update' => $this->lng->txt('last_refresh'), // getLastUpdate
+					'time_limit_unlimited' => $this->lng->txt('time_limit_unlimited'), // getTimeLimitUnlimited
+					'time_limit_from' => $this->lng->txt('time_limit_from'), // getTimeLimitFrom
+					'time_limit_until' => $this->lng->txt('time_limit_until'), // getTimeLimitUntil
+					'matriculation' => $this->lng->txt('matriculation'), // getMatriculation
+					'approve_date' => $this->lng->txt('approve_date'), // getApproveDate
+					'agree_date' => $this->lng->txt('agree_date'), // getAgreeDate
+					'external_account' => $this->lng->txt('user_ext_account'), // getExternalAccount
+					'latitude' => $this->lng->txt('maps_latitude'), // getLatitude
+					'longitude' => $this->lng->txt('maps_longitude'), // getLongitude
+					'birthday' => $this->lng->txt('birthday'), // getBirthday
+					'department' => $this->lng->txt('department'), // getDepartment
+					'create_date' => $this->lng->txt('create_date'), // getCreateDate
+					'auth_mode' => $this->lng->txt('auth_mode'), // getAuthMode
+					'import_id' => $this->lng->txt('ecs_import_id'), // getImportId
+				];
+				break;
+			case 'udf_data':
+				/*
+				 * READ:
+				 * $udfObj = \ilUserDefinedFields::_getInstance();
+				 * $udef = $udfObj->getVisibleDefinitions();
+				 * $uddObj = new \ilUserDefinedData($event->getUsrId());
+				 * $udata = $uddObj->getAll();
+				 * foreach ($udef as $field_id => $definition) {
+				 * 		$data[$field_id] = (isset($udata[$field_id]) ? $udata[$field_id] : NULL);
+				 * }
+				 */
+				$udfObj = \ilUserDefinedFields::_getInstance();
+				$udef = $udfObj->getVisibleDefinitions();
+				if (!empty($udef)) {
+					$options = [];
+					foreach ($udef as $field_id => $definition) {
+						$options[$field_id] = $definition['field_name'];
+					}
+				}
+				break;
+		}
+		return $options;
+	}
+
+	protected function createTag()
+	{
+		$form = $this->getNewTagForm();
+
+		if ($form->checkInput()) {
+			$tag = new Tag();
+			$tag->setName($form->getInput('ga_tag_key'));
+			$tag->setType($form->getInput('data_type'));
+			if ($tag->getType() == 'user_data' && $form->getInput('ud_select')) {
+				$tag->setDefinition($form->getInput('ud_select'));
+			}
+			if ($tag->getType() == 'udf_data' && $form->getInput('udf_select')) {
+				$tag->setDefinition($form->getInput('udf_select'));
+			}
+
+			if ($tag->getDefinition() === '') {
+				ilUtil::sendFailure($this->txt("saving_wrong_data"), true);
+				$form->setValuesByPost();
+				$this->tpl->setContent($form->getHtml());
+				return;
+			}
+
+			$tag->save();
+
+			ilUtil::sendSuccess($this->txt("saving_invoked"), true);
+			$this->ctrl->redirect($this, "listTags");
+
+		} else {
+			$form->setValuesByPost();
+			$this->tpl->setContent($form->getHtml());
+		}
+	}
+
+	protected function updateTag()
+	{
+		$tag_id = $_REQUEST['tag_id'];
+		$form = $this->getNewTagForm();
+
+		if ($form->checkInput()) {
+			$tag = new Tag($tag_id);
+			$tag->setName($form->getInput('ga_tag_key'));
+			$tag->setType($form->getInput('data_type'));
+			if ($tag->getType() == 'user_data' && $form->getInput('ud_select')) {
+				$tag->setDefinition($form->getInput('ud_select'));
+			}
+			if ($tag->getType() == 'udf_data' && $form->getInput('udf_select')) {
+				$tag->setDefinition($form->getInput('udf_select'));
+			}
+
+			if ($tag->getDefinition() === '') {
+				ilUtil::sendFailure($this->txt("saving_wrong_data"), true);
+				$form->setValuesByPost();
+				$this->tpl->setContent($form->getHtml());
+				return;
+			}
+
+			$tag->save();
+
+			ilUtil::sendSuccess($this->txt("saving_invoked"), true);
+			$this->ctrl->redirect($this, "listTags");
+
+		} else {
+			$form->setValuesByPost();
+			$this->tpl->setContent($form->getHtml());
+		}
+	}
+
+	protected function askDeleteTag(): void
+	{
+		if(!$_POST["tag_id"])
+		{
+			ilUtil::sendFailure($this->txt("select_one"));
+			$this->listTags();
+			return;
+		}
+		$tags = $_POST['tag_id'];
+
+		$confirmation_gui = new \ilConfirmationGUI();
+		$confirmation_gui->setFormAction($this->ctrl->getFormAction($this));
+		$confirmation_gui->setHeaderText($this->txt("delete_tags_confirm"));
+		$confirmation_gui->setCancel($this->lng->txt("cancel"), "listTags");
+		$confirmation_gui->setConfirm($this->lng->txt("delete"), "deleteTag");
+
+		foreach ($tags as $tag_id) {
+			$tagObj = new Tag($tag_id);
+			$confirmation_gui->addItem("tag_id[]", $tag_id, $tagObj->getName());
+		}
+
+		$this->tpl->setContent($confirmation_gui->getHTML());
+	}
+
+	protected function deleteTag()
+	{
+		if(!$_POST["tag_id"])
+		{
+			ilUtil::sendFailure($this->txt("err_no_data"));
+			$this->listTags();
+			return;
+		}
+		$tags = $_POST['tag_id'];
+
+		$fail = [];
+		$success = [];
+		foreach ($tags as $tag_id) {
+			$tag = new Tag($tag_id);
+			if ($tag->delete() === false) {
+				$fail[] = $tag->getName();
+			} else {
+				$success[] = $tag->getName();
+			}
+		}
+
+		if(count($fail) > 0)
+		{
+			ilUtil::sendFailure(sprintf($this->txt("err_delete_names"), implode(', ', $fail)));
+		}
+		if (count($success) > 0) {
+			ilUtil::sendSuccess(sprintf($this->txt("delete_success"), implode(', ', $success)), true);
+		}
+		$this->ctrl->redirect($this, "listTags");
+	}
+
+	/**
+	 * @return void
+	 */
+	protected function configure(): void
 	{
 		$form = $this->getConfigurationForm();
 
@@ -158,7 +515,7 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 	/**
 	 * @return void
 	 */
-	public function save()
+	public function save(): void
 	{
 		$form = $this->getConfigurationForm();
 
@@ -210,6 +567,18 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 	protected function txt($a_var): string
 	{
 		return $this->plugin->txt($a_var);
+	}
+
+	/**
+	 * @return void
+	 */
+	private function setTabs(): void
+	{
+		if (!empty($this->getTabs())) {
+			foreach ($this->getTabs() as $tab) {
+				$this->tabs->addTab($tab['id'], $tab['txt'], $this->ctrl->getLinkTarget($this, $tab['cmd']));
+			}
+		}
 	}
 
 }
