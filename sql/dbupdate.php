@@ -34,3 +34,38 @@ if(!$ilDB->tableExists('ganalytics_urel'))
 <?php
 $ilDB->addIndex('ganalytics_urel', array('ga_uid'), 'i1');
 ?>
+<#3>
+<?php
+if(!$ilDB->tableExists('ganalytics_tags'))
+{
+	$ilDB->createTable('ganalytics_tags', [
+		'id' => [
+			'type'     => 'integer',
+			'length'   => 4,
+			'notnull' => true,
+			'default' => 0
+		],
+		'name' => [
+			'type'     => 'text',
+			'length'   => 255,
+			'notnull' => true,
+			'default' => 0
+		],
+		'type' => [
+			'type'     => 'text',
+			'length'   => 255,
+			'notnull' => true,
+			'default' => 0
+		],
+		'definition' => [
+			'type'     => 'text',
+			'length'   => 255,
+			'notnull' => true,
+			'default' => 0
+		],
+	]);
+	$ilDB->addPrimaryKey('ganalytics_tags', array('id'));
+	$ilDB->createSequence('ganalytics_tags');
+	$ilDB->addIndex('ganalytics_tags', array('name'), 'i1');
+}
+?>
