@@ -8,6 +8,11 @@
         if (window.il_ga.ut === true) {
             gtm_data[window.il_ga.ukey] = window.il_ga.uid;
         }
+        if (Object.keys(window.il_ga.tags).length > 0) {
+            for (key in window.il_ga.tags) {
+                gtm_data[key] = window.il_ga.tags[key];
+            }
+        }
         dataLayer.push(gtm_data);
         (function (w, d, s, l, i) {
             var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
@@ -22,6 +27,9 @@
         ut: {ut},
         uid: '{user_id}',
         ukey: '{user_key}',
+        tags: {
+            {GA_OPTIONAL_TAGS}
+        },
         setTrack: function (choice, changed) {
             window.il_ga.ut = choice;
             if (choice === true) {

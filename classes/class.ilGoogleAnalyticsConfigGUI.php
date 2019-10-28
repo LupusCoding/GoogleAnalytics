@@ -165,16 +165,15 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 		/* Type of data Choice            */
 		/**********************************/
 		$type_select = new \ilRadioGroupInputGUI($this->txt('data_type'), 'data_type');
-//		$type_select->setInfo($this->txt('data_type_info'));
 		$type_select->setRequired(true);
 
-		// option user data
-		$ts_usr = new \ilRadioOption($this->txt('user_data'), 'user_data', $this->txt('user_data_info'));
-		/* User data Select               */
-		$ud_values = new \ilSelectInputGUI($this->txt('ud_select'),'ud_select');
-		$ud_values->setOptions($this->getSelectOptionsByChoice('user_data'));
-		$ts_usr->addSubItem($ud_values);
-		$type_select->addOption($ts_usr);
+//		// option user data
+//		$ts_usr = new \ilRadioOption($this->txt('user_data'), 'user_data', $this->txt('user_data_info'));
+//		/* User data Select               */
+//		$ud_values = new \ilSelectInputGUI($this->txt('ud_select'),'ud_select');
+//		$ud_values->setOptions($this->getSelectOptionsByChoice('user_data'));
+//		$ts_usr->addSubItem($ud_values);
+//		$type_select->addOption($ts_usr);
 
 		// option udf data
 		$ts_udf = new \ilRadioOption($this->txt('udf_data'), 'udf_data', $this->txt('udf_data_info'));
@@ -197,13 +196,14 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 			$type_select->setValue($tag->getType());
 
 			switch ($tag->getType()) {
-				case 'user_data':
-					$ud_values->setValue($tag->getDefinition());
-					break;
+//				case 'user_data':
+//					$ud_values->setValue($tag->getDefinition());
+//					break;
 				case 'udf_data':
 					$udf_values->setValue($tag->getDefinition());
 					break;
 			}
+			$type_select->setDisabled(true);
 
 			$this->ctrl->setParameter($this, 'tag_id', $tag_id);
 			$form->addCommandButton("updateTag", $this->lng->txt("save"));

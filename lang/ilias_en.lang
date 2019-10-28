@@ -38,8 +38,8 @@ user_data#:#User Data
 user_data_info#:#Select from user data. E.g. user ID, login, name, institution, matriculation, etc.
 udf_data#:#UDF Data
 udf_data_info#:#Select from your configured "User Defined Fields". The field must be "visible".
-ud_select#:#Select User data
-udf_select#:#Select User Defined Field
+ud_select#:#User data
+udf_select#:#User Defined Field
 delete_tags_confirm#:#Do you really want to delete these tags?
 select_one#:#Select at least one tag to delete.
 err_no_data#:#No Tags were selected.
