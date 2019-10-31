@@ -121,7 +121,6 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 
 		$table = new ilTagListTableGUI($this);
 		$this->tpl->setContent($table->getHTML());
-//		$this->tpl->setContent('');
 	}
 
 	/**
@@ -167,14 +166,6 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 		$type_select = new \ilRadioGroupInputGUI($this->txt('data_type'), 'data_type');
 		$type_select->setRequired(true);
 
-//		// option user data
-//		$ts_usr = new \ilRadioOption($this->txt('user_data'), 'user_data', $this->txt('user_data_info'));
-//		/* User data Select               */
-//		$ud_values = new \ilSelectInputGUI($this->txt('ud_select'),'ud_select');
-//		$ud_values->setOptions($this->getSelectOptionsByChoice('user_data'));
-//		$ts_usr->addSubItem($ud_values);
-//		$type_select->addOption($ts_usr);
-
 		// option udf data
 		$ts_udf = new \ilRadioOption($this->txt('udf_data'), 'udf_data', $this->txt('udf_data_info'));
 		/* UDF data Select                */
@@ -196,9 +187,6 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 			$type_select->setValue($tag->getType());
 
 			switch ($tag->getType()) {
-//				case 'user_data':
-//					$ud_values->setValue($tag->getDefinition());
-//					break;
 				case 'udf_data':
 					$udf_values->setValue($tag->getDefinition());
 					break;
@@ -226,50 +214,6 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 		$this->lng->loadLanguageModule('ecs');
 		$options = ['none' => ''];
 		switch ($choice) {
-			case 'user_data':
-				$options = [ // ilObjUser
-					/*
-					 * READ:
-					 * $usrObj = $DIC->user();
-					 * $user->{'get'.$options_key}()
-					 */
-					'id' => $this->lng->txt('links_user_id'), // getId
-					'login' => $this->lng->txt('login'), // getLogin
-					'firstname' => $this->lng->txt('firstname'), // getFirstname
-					'lastname' => $this->lng->txt('lastname'), // getLastname
-					'fullname' => $this->lng->txt('fullname'), // getFullname
-					'u_title' => $this->lng->txt('person_title'), // getUTitle
-					'gender' => $this->lng->txt('gender'), // getGender
-					'email' => $this->lng->txt('email'), // getEmail
-					'second_email' => $this->lng->txt('second_email'), // getSecondEmail
-					'institution' => $this->lng->txt('institution'), // getInstitution
-					'street' => $this->lng->txt('street'), // getStreet
-					'city' => $this->lng->txt('city'), // getCity
-					'zipcode' => $this->lng->txt('zipcode'), // getZipcode
-					'country' => $this->lng->txt('country'), // getCountry
-					'phone_office' => $this->lng->txt('phone_office'), // getPhoneOffice
-					'phone_home' => $this->lng->txt('phone_home'), // getPhoneHome
-					'phone_mobile' => $this->lng->txt('phone_mobile'), // getPhoneMobile
-					'fax' => $this->lng->txt('fax'), // getFax
-					'language' => $this->lng->txt('language'), // getLanguage
-					'last_login' => $this->lng->txt('last_login'), // getLastLogin
-					'last_update' => $this->lng->txt('last_refresh'), // getLastUpdate
-					'time_limit_unlimited' => $this->lng->txt('time_limit_unlimited'), // getTimeLimitUnlimited
-					'time_limit_from' => $this->lng->txt('time_limit_from'), // getTimeLimitFrom
-					'time_limit_until' => $this->lng->txt('time_limit_until'), // getTimeLimitUntil
-					'matriculation' => $this->lng->txt('matriculation'), // getMatriculation
-					'approve_date' => $this->lng->txt('approve_date'), // getApproveDate
-					'agree_date' => $this->lng->txt('agree_date'), // getAgreeDate
-					'external_account' => $this->lng->txt('user_ext_account'), // getExternalAccount
-					'latitude' => $this->lng->txt('maps_latitude'), // getLatitude
-					'longitude' => $this->lng->txt('maps_longitude'), // getLongitude
-					'birthday' => $this->lng->txt('birthday'), // getBirthday
-					'department' => $this->lng->txt('department'), // getDepartment
-					'create_date' => $this->lng->txt('create_date'), // getCreateDate
-					'auth_mode' => $this->lng->txt('auth_mode'), // getAuthMode
-					'import_id' => $this->lng->txt('ecs_import_id'), // getImportId
-				];
-				break;
 			case 'udf_data':
 				/*
 				 * READ:

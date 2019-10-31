@@ -13,7 +13,7 @@ if(!$ilDB->tableExists('ganalytics_urel'))
 			'type'     => 'text',
 			'length'   => 255,
 			'notnull' => true,
-			'default' => 0
+			'default' => '0'
 		],
 		'ga_track' => [
 			'type'     => 'integer',
@@ -49,19 +49,19 @@ if(!$ilDB->tableExists('ganalytics_tags'))
 			'type'     => 'text',
 			'length'   => 255,
 			'notnull' => true,
-			'default' => 0
+			'default' => ''
 		],
 		'type' => [
 			'type'     => 'text',
 			'length'   => 255,
 			'notnull' => true,
-			'default' => 0
+			'default' => ''
 		],
 		'definition' => [
 			'type'     => 'text',
 			'length'   => 255,
 			'notnull' => true,
-			'default' => 0
+			'default' => NULL
 		],
 	]);
 	$ilDB->addPrimaryKey('ganalytics_tags', array('id'));

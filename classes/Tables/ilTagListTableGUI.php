@@ -32,7 +32,6 @@ class ilTagListTableGUI extends \ilTable2GUI
 		parent::__construct($parent_obj, $parent_cmd);
 
 		$this->setTitle($this->pl->txt('list_of_tags'));
-//		$this->setLimit(9999);
 
 		$this->addColumns();
 

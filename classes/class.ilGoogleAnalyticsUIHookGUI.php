@@ -209,19 +209,7 @@ class ilGoogleAnalyticsUIHookGui extends ilUIHookPluginGUI
 					$uddObj = new \ilUserDefinedData($user->getId());
 					$definition = $uddObj->get("f_".$tag->getDefinition());
 					break;
-				case 'user_data':
-					$fn = preg_replace_callback(
-						'/(\_[a-z])/',
-						function($matches) {
-							return strtoupper(substr($matches[0], 1));
-						},
-						$tag->getDefinition()
-					);
-					$func = 'get'. ucfirst($fn);
-					$definition = $user->{$func}();
-					break;
 				default:
-//					$definition = $tag->getDefinition();
 					continue;
 					break;
 			}
