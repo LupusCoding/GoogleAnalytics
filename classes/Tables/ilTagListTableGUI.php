@@ -204,7 +204,7 @@ class ilTagListTableGUI extends \ilTable2GUI
 	{
 		$tagCollection = new TagCollection();
 
-		if ($tagCollection->getTagCount() > 0) {
+		if ($tagCollection->count() > 0) {
 			$this->setData($tagCollection->getTags());
 		} else {
 			$this->setData([]);

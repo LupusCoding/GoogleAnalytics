@@ -7,7 +7,7 @@ namespace LC\ILP\GoogleAnalytics\DataObjects;
  * @package LC\ILP\GoogleAnalytics\DataObjects
  * @author Ralph Dittrich <dittrich@qualitus.de>
  */
-class TagCollection
+class TagCollection implements \Countable
 {
 	/** @var \ilDBInterface  */
 	protected $database;
@@ -38,7 +38,7 @@ class TagCollection
 	/**
 	 * @return int
 	 */
-	public function getTagCount(): int
+	public function count(): int
 	{
 		return count($this->tags);
 	}
@@ -61,7 +61,7 @@ class TagCollection
 		foreach ($res as $item) {
 			$tag = new Tag();
 
-			$tag->setId($item['id']);
+			$tag->setId((int)$item['id']);
 			$tag->setName($item['name']);
 			$tag->setType($item['type']);
 			$tag->setDefinition($item['definition']);

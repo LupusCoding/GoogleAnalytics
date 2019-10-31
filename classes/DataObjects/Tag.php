@@ -130,7 +130,7 @@ class Tag
 		}
 		$res = $res[0];
 
-		$this->setId($res['id']);
+		$this->setId((int)$res['id']);
 		$this->setName($res['name']);
 		$this->setType($res['type']);
 		$this->setDefinition($res['definition']);
@@ -142,7 +142,7 @@ class Tag
 	/**
 	 * @return bool
 	 */
-	public function delete()
+	public function delete(): bool
 	{
 		$types = [
 			'integer',
@@ -190,8 +190,9 @@ class Tag
 			'text',
 			'text',
 		];
+		$this->setId($this->database->nextId(self::DB_TABLE));
 		$values = [
-			$this->database->nextId(self::DB_TABLE),
+			$this->getId(),
 			$this->getName(),
 			$this->getType(),
 			$this->getDefinition(),
@@ -206,6 +207,7 @@ class Tag
 			$types,
 			$values
 		);
+		$this->update = true;
 	}
 
 	/**

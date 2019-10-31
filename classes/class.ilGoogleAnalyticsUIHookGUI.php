@@ -42,7 +42,7 @@ class ilGoogleAnalyticsUIHookGui extends ilUIHookPluginGUI
 						if ($this->isTrackableUser($DIC->user())) {
 							// Tag collection
 							$tagCollection = new TagCollection();
-							if ($tagCollection->getTagCount() > 0) {
+							if ($tagCollection->count() > 0) {
 								$tag_snippet = $this->getTagSnippetsByCollection($tagCollection, $DIC->user());
 							}
 
