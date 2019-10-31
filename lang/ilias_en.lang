@@ -30,15 +30,15 @@ tag_definition#:#Tag Data Definition
 addNewTag#:#New Tag
 new_tag_form#:#Create new Tag
 edit_tag_form#:#Edit existing Tag
-ga_tag_key#:#TagManager variable
+ga_tag_key#:#TagManager Variable
 ga_tag_key_info#:#This must be identical to the configured Google Tag Manager variable. (Caution: This variable name is case-sensitive)
-data_type#:#Type of data
+data_type#:#Type of Data
 data_type_info#:#Choose the type of data, that you want to select from.
 user_data#:#User Data
 user_data_info#:#Select from user data. E.g. user ID, login, name, institution, matriculation, etc.
 udf_data#:#UDF Data
 udf_data_info#:#Select from your configured "User Defined Fields". The field must be "visible".
-ud_select#:#User data
+ud_select#:#User Data
 udf_select#:#User Defined Field
 delete_tags_confirm#:#Do you really want to delete these tags?
 select_one#:#Select at least one tag to delete.
