@@ -61,7 +61,7 @@ if(!$ilDB->tableExists('ganalytics_tags'))
 			'type'     => 'text',
 			'length'   => 255,
 			'notnull' => true,
-			'default' => NULL
+			'default' => ''
 		],
 	]);
 	$ilDB->addPrimaryKey('ganalytics_tags', array('id'));
