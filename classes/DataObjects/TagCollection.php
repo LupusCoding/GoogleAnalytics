@@ -48,7 +48,7 @@ class TagCollection implements \Countable
 	 */
 	public function loadTags(): bool
 	{
-		$select = 'SELECT * FROM ' . Tag::DB_TABLE . ';';
+		$select = 'SELECT * FROM ' . Tag::DB_TABLE . ' ';
 
 		$result = $this->database->query($select);
 		$res = $this->database->fetchAll($result);

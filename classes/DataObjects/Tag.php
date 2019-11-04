@@ -152,7 +152,7 @@ class Tag
 		];
 
 		$query = 'DELETE FROM ' . self::DB_TABLE . ' ';
-		$query .= 'WHERE `id` = %s ';
+		$query .= 'WHERE id = %s ';
 
 		$res = $this->database->manipulateF(
 			$query,
