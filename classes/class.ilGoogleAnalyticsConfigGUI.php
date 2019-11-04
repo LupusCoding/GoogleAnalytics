@@ -174,6 +174,7 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 		$ts_udf->addSubItem($udf_values);
 		$type_select->addOption($ts_udf);
 
+		$type_select->setValue('udf_data');
 		$form->addItem($name);
 		$form->addItem($type_select);
 
@@ -266,6 +267,7 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 			$this->ctrl->redirect($this, "listTags");
 
 		} else {
+			$this->tabs->activateTab('listTags');
 			$form->setValuesByPost();
 			$this->tpl->setContent($form->getHtml());
 		}
@@ -300,6 +302,7 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 			$this->ctrl->redirect($this, "listTags");
 
 		} else {
+			$this->tabs->activateTab('listTags');
 			$form->setValuesByPost();
 			$this->tpl->setContent($form->getHtml());
 		}
