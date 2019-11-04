@@ -45,4 +45,3 @@ select_one#:#Select at least one tag to delete.
 err_no_data#:#No Tags were selected.
 err_delete_names#:#The following tags could not be deleted: %s.
 delete_success#:#The following tags were deleted: %s.
-

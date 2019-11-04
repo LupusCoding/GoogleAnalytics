@@ -233,6 +233,7 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 					foreach ($udef as $field_id => $definition) {
 						$options[$field_id] = $definition['field_name'];
 					}
+					asort($options);
 				}
 				break;
 		}
