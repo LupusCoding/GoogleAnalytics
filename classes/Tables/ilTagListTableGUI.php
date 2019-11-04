@@ -43,6 +43,7 @@ class ilTagListTableGUI extends \ilTable2GUI
 
 		$this->prepareData();
 
+		$this->setSelectAllCheckbox("tag_id[]");
 		$this->addMultiCommand("askDeleteTag", $this->lng->txt("delete"));
 	}
 
