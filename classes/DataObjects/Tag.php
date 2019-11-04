@@ -119,7 +119,7 @@ class Tag
 	 */
 	public function loadById(int $id): bool
 	{
-		$select = 'SELECT * FROM `' . self::DB_TABLE . '` WHERE id = ' .
+		$select = 'SELECT * FROM ' . self::DB_TABLE . ' WHERE id = ' .
 			$this->database->quote($id, 'integer');
 
 		$result = $this->database->query($select);
@@ -151,7 +151,7 @@ class Tag
 			$this->getId(),
 		];
 
-		$query = 'DELETE FROM `' . self::DB_TABLE . '` ';
+		$query = 'DELETE FROM ' . self::DB_TABLE . ' ';
 		$query .= 'WHERE `id` = %s ';
 
 		$res = $this->database->manipulateF(
@@ -198,7 +198,7 @@ class Tag
 			$this->getDefinition(),
 		];
 
-		$query = 'INSERT INTO `' . self::DB_TABLE . '` ';
+		$query = 'INSERT INTO ' . self::DB_TABLE . ' ';
 		$query .= '(id, name, type, definition) ';
 		$query .= 'VALUES (%s, %s, %s, %s) ';
 
@@ -228,7 +228,7 @@ class Tag
 			$this->getId(),
 		];
 
-		$query = 'UPDATE `' . self::DB_TABLE . '` SET ';
+		$query = 'UPDATE ' . self::DB_TABLE . ' SET ';
 		$query .= 'name = %s, ';
 		$query .= 'type = %s, ';
 		$query .= 'definition = %s ';
