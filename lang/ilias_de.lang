@@ -20,3 +20,28 @@ sentence_active#:#Deaktivierungstext
 sentence_active_info#:#Text zum Deaktivieren des Tracking. Bsp.: Klicken Sie hier um das Tracking zu deaktivieren.
 sentence_inactive#:#Aktivierungstext
 sentence_inactive_info#:#Text zum Aktivieren des Tracking. Bsp.: Klicken Sie hier um das Tracking zu aktivieren.
+add_noscript#:#&lt;noscript&gt; Tag hinzufügen
+add_noscript_info#:#Der noscript Tag erlaubt das Tracking von Klicks auch bei deaktiviertem JavaScript.
+tag_configuration#:#Tag Konfiguration
+list_of_tags#:#Liste der Tags
+tag_name#:#Tag Name
+tag_type#:#Tag Datentyp
+tag_definition#:#Tag Daten-Definition
+addNewTag#:#Neuer Tag
+new_tag_form#:#Tag erstellen
+edit_tag_form#:#Tag bearbeiten
+ga_tag_key#:#TagManager Variable
+ga_tag_key_info#:#Dieser Wert muss identisch zu der konfigurierten Google Tag Manager Variable sein. (Achtung: Beachten Sie die Groß-Klein-Schreibung)
+data_type#:#Art der Daten
+data_type_info#:#Wählen Sie die Art der Daten.
+user_data#:#Benutzerdaten (user_data)
+user_data_info#:#Wählen Sie aus den Benutzerdaten. Z.B. Benutzer ID, Benutzername, Vorname, Nachname, Land, etc.
+udf_data#:#Benutzerdefinierte Felder (udf_data)
+udf_data_info#:#Wählen Sie aus den benutzerdefinierten Feldern. Die Felder benötigen das Recht "sichtbar".
+ud_select#:#Benutzerdaten
+udf_select#:#Benutzerdefiniertes Feld
+delete_tags_confirm#:#Wollen Sie diese Tags wirklich löschen?
+select_one#:#Wählen Sie mindestens einen Tag aus.
+err_no_data#:#Es wurden keine Tags übermittelt.
+err_delete_names#:#Die folgenden Tags konnten nicht gelöscht werden: %s.
+delete_success#:#Die folgenden Tags wurden erfolgreich gelöscht: %s.
