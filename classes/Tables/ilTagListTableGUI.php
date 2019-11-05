@@ -43,7 +43,7 @@ class ilTagListTableGUI extends \ilTable2GUI
 
 		$this->prepareData();
 
-		$this->setSelectAllCheckbox("tag_id[]");
+		$this->setSelectAllCheckbox("tag_id");
 		$this->addMultiCommand("askDeleteTag", $this->lng->txt("delete"));
 	}
 
@@ -154,30 +154,35 @@ class ilTagListTableGUI extends \ilTable2GUI
 			'default' => true,
 			'width' => 'auto',
 			'sort_field' => false,
+			'checkbox' => true,
 		];
 		$cols['name'] = [
 			'txt' => $this->pl->txt('tag_name'),
 			'default' => true,
 			'width' => 'auto',
 			'sort_field' => false,
+			'checkbox' => false,
 		];
 		$cols['type'] = [
 			'txt' => $this->pl->txt('tag_type'),
 			'default' => true,
 			'width' => 'auto',
 			'sort_field' => false,
+			'checkbox' => false,
 		];
 		$cols['definition'] = [
 			'txt' => $this->pl->txt('tag_definition'),
 			'default' => true,
 			'width' => 'auto',
 			'sort_field' => false,
+			'checkbox' => false,
 		];
 		$cols['actions'] = [
 			'txt' => $this->lng->txt('actions'),
 			'default' => true,
 			'width' => 'auto',
 			'sort_field' => false,
+			'checkbox' => false,
 		];
 
 		return $cols;
@@ -194,8 +199,18 @@ class ilTagListTableGUI extends \ilTable2GUI
 			} else {
 				$sort = NULL;
 			}
-			$this->addColumn($v['txt'], $sort, $v['width']);
+			$width = $v['width'];
+			if (isset($v['checkbox'])) {
+				$checkbox = $v['checkbox'];
+				if ($checkbox) {
+					$width = 1;
+				}
+			} else {
+				$checkbox = false;
+			}
+			$this->addColumn($v['txt'], $sort, $width, $checkbox);
 		}
+
 	}
 
 	/**
