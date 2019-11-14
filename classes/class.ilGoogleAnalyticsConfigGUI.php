@@ -469,21 +469,15 @@ class ilGoogleAnalyticsConfigGUI extends ilPluginConfigGUI
 
 		if ($form->checkInput()) {
 			// save...
-			if ($form->getInput('active')) {
-				$this->settings->setActive(($form->getInput('active') == true));
-			}
+			$this->settings->setActive(($form->getInput('active') == true));
 			if ($form->getInput('token')) {
 				$this->settings->setAnalyticsToken($form->getInput('token'));
 			}
-			if ($form->getInput('track_uid')) {
-				$this->settings->setTrackUid(($form->getInput('track_uid') == true));
-			}
+			$this->settings->setTrackUid(($form->getInput('track_uid') == true));
 			if ($form->getInput('uid_key')) {
 				$this->settings->setUidKey($form->getInput('uid_key'));
 			}
-			if ($form->getInput('add_noscript')) {
-				$this->settings->setAddNoscript(($form->getInput('add_noscript') == true));
-			}
+			$this->settings->setAddNoscript(($form->getInput('add_noscript') == true));
 			if ($form->getInput('opt_in_out')) {
 				$this->settings->setOptInOut($form->getInput('opt_in_out'));
 			}
