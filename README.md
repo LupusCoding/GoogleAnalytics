@@ -1,3 +1,7 @@
+![Development: closed](https://img.shields.io/badge/Development-closed-orange)&nbsp;
+![Reason: sold](https://img.shields.io/badge/reason-sold-blue)<br/>
+Contact [Qualitus GmbH](mailto:info@qualitus.de) to get newer versions and updates.
+
 # GoogleAnalytics
 
 Simple Plugin to track statistics with GoogleAnalytics
